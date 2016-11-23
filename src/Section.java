@@ -1,5 +1,5 @@
 
-public class Section {
+public class Section extends DatabaseObject{
 
 	
 	private Classroom classroom;
@@ -12,7 +12,8 @@ public class Section {
 	private int numSeats;
 	private String daysOfWeek;
 	
-	public Section(Classroom classroom, Professor professorID, Course course, String startTime, String endTime, String startDate, String EndDate, int numSeats, String daysOfWeek){
+	public Section(int primaryKey, Classroom classroom, Professor professorID, Course course, String startTime, String endTime, String startDate, String EndDate, int numSeats, String daysOfWeek){
+		super(primaryKey); 
 		this.classroom = classroom;
 		this.professor = professor;
 		this.course = course;

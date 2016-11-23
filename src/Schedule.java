@@ -1,11 +1,11 @@
 import java.util.ArrayList;
 
-public class Schedule {
+public class Schedule extends DatabaseObject{
 	
 	private ArrayList<Section> sections;
 	
-	public Schedule(){
-		
+	public Schedule(int primaryKey){
+		super(primaryKey); 
 	}
 	
 	public void AddSection(Section newSection){
