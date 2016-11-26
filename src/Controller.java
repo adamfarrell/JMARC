@@ -16,7 +16,7 @@ public class Controller {
 
 
 	private static final  String connectionUrl = "jdbc:sqlserver://localhost\\SQL:4373;" +  "databaseName=SectionSchedule;user=James;password=Rpaint11";
-
+	private static ArrayList<String> test = new ArrayList<String>();
 	private static Professor getSingleProfessor(String pk)
 	{
 		 Professor professorObj = null; 
@@ -1322,6 +1322,71 @@ public class Controller {
 		 Professor professor; 
 		 professor = getSingleProfessor("1");
 		 System.out.println(professor.GetPrimaryKey() + " " + professor.GetFirstName()+ " " + professor.GetLastName());
+		 
+		//get a single COURSE that from primary key 
+		 System.out.println(" ");
+		 System.out.println("____________________Return a Single Course_____________________");
+		 Course course; 
+		 course = getSingleCourse("1");
+		 System.out.println(course.GetPrimaryKey() + " " + course.GetCourseTag()+ " " + course.GetCourseNumber());
+		
+		//get a single Classroom that from primary key 
+		 System.out.println(" ");
+		 System.out.println("____________________Return a Single Classroom_____________________");
+		 Classroom classroom; 
+		 classroom = getSingleClassroom("1");
+		 System.out.println(classroom.GetPrimaryKey() + " " + classroom.GetRoomNumber());
+		 
+		//getSection(professorID) get a Section with the professorID 
+		 test = getProfessorSections("3"); 
+		 System.out.println(" ");
+		 System.out.println("________SECTION W/professorID________");
+		 for(int i=1; i <= test.size(); i++)
+		 {
+			
+			System.out.print(test.get(i-1)); 
+			System.out.print(", ");
+			if(i%11 == 0) 
+			{
+				System.out.println(" ");
+			}
+		 }
+		 test.clear();
+		
+		 //getSection(professorID) get a Section with the classroomID 
+		 test = getClassroomSections("1"); 
+		 System.out.println(" ");
+		 System.out.println("________SECTION W/classRoomID________");
+		 for(int i=1; i <= test.size(); i++)
+		 {
+			
+			System.out.print(test.get(i-1)); 
+			System.out.print(", ");
+			if(i%11 == 0) 
+			{
+				System.out.println(" ");
+			}
+		 }
+		 test.clear();
+		 
+		 //getTimeSections(classroomID, professorID) get SECTION startTime & endTime W/classRoomID & professorID 
+		 test = getSectionsTime("76", "10"); 
+		 System.out.println(" ");
+		 System.out.println("________SECTION startTime & endTime W/classRoomID & professorID________");
+		 for(int i=0; i < test.size(); i++)
+		 {
+			if(i ==0)
+			{
+				System.out.print("Start Time: " + test.get(i)); 
+				System.out.print(", ");
+			}
+			else
+			{
+				System.out.print("End Time: " + test.get(i)); 
+			}
+		 }
+		 test.clear();
+		 
 		 
 		 
 		//System.out.println("____________________This is an Insert into the professor table_____________________");
