@@ -5,7 +5,7 @@ public class Building extends DatabaseObject
 
 	private ArrayList<Classroom> innerArr; 
 	private String buildingTag; 
-	Building(int primaryKey, String buildingTag)
+	Building(String primaryKey, String buildingTag)
 	{
 		super(primaryKey);
 		this.buildingTag = buildingTag; 
@@ -24,7 +24,7 @@ public class Building extends DatabaseObject
 	
 	public String toString()
 	{
-		return buildingTag + " " + Integer.toString(super.GetPrimaryKey()); 
+		return buildingTag + " " + super.GetPrimaryKey(); 
 	}
 	
 	public void AddClassroom(Classroom toAdd)
@@ -33,7 +33,7 @@ public class Building extends DatabaseObject
 		
 	}
 	
-	public void RemoveClassroom(int primaryKey)
+	public void RemoveClassroom(String primaryKey)
 	{
 		for(int i = 0; i < innerArr.size(); i++)
 		{

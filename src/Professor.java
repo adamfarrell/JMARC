@@ -7,7 +7,7 @@ public class Professor extends DatabaseObject
 	private int fillerHours;
 	private int creditHours; 
 	
-	public Professor(int primaryKey ,String firstName, String lastName)
+	public Professor(String primaryKey ,String firstName, String lastName)
 	{
 		super(primaryKey); 
 		
@@ -59,7 +59,7 @@ public class Professor extends DatabaseObject
 	public String toString()
 	{
 		return firstName + " " + lastName + " " + Integer.toString(creditHours) + " " + Integer.toString(fillerHours)
-		 + " " + Integer.toString(super.GetPrimaryKey()); 
+		 + " " + super.GetPrimaryKey(); 
 	}
 	
 }

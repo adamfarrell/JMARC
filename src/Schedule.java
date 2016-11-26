@@ -4,7 +4,7 @@ public class Schedule extends DatabaseObject{
 	
 	private ArrayList<Section> sections;
 	
-	public Schedule(int primaryKey){
+	public Schedule(String primaryKey){
 		super(primaryKey); 
 	}
 	

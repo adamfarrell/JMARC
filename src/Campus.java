@@ -8,7 +8,7 @@ public class Campus extends DatabaseObject
 	private String name; 
 	private ArrayList<Building> buildingList; 
 	
-	Campus(int primaryKey, String name)
+	Campus(String primaryKey, String name)
 	{
 		super(primaryKey);
 		this.name = name;
@@ -36,7 +36,7 @@ public class Campus extends DatabaseObject
 		return buildingList.get(index); 
 	}
 	
-	public void RemoveBuilding(int primaryKey)
+	public void RemoveBuilding(String primaryKey)
 	{
 		for(int i = 0; i < buildingList.size(); i++)
 		{
@@ -49,7 +49,7 @@ public class Campus extends DatabaseObject
 	
 	public String toString()
 	{
-		return name + " " + Integer.toString(super.GetPrimaryKey()); 
+		return name + " " + super.GetPrimaryKey(); 
 	}
 
 }

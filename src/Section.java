@@ -9,10 +9,10 @@ public class Section extends DatabaseObject{
 	private String endTime;
 	private String startDate;
 	private String endDate;
-	private int numSeats;
+	private String numSeats;
 	private String daysOfWeek;
 	
-	public Section(int primaryKey, Classroom classroom, Professor professorID, Course course, String startTime, String endTime, String startDate, String EndDate, int numSeats, String daysOfWeek){
+	public Section(String primaryKey, Classroom classroom, Professor professor, Course course, String startTime, String endTime, String startDate, String endDate, String numSeats, String daysOfWeek){
 		super(primaryKey); 
 		this.classroom = classroom;
 		this.professor = professor;
@@ -81,11 +81,11 @@ public class Section extends DatabaseObject{
 		this.endDate = endDate;
 	}
 
-	public int getNumSeats() {
+	public String getNumSeats() {
 		return numSeats;
 	}
 
-	public void setNumSeats(int numSeats) {
+	public void setNumSeats(String numSeats) {
 		this.numSeats = numSeats;
 	}
 

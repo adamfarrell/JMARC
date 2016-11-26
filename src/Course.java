@@ -2,25 +2,25 @@
 public class Course extends DatabaseObject{
 	
 	private String courseTag;
-	private int courseNumber;
+	private String courseNumber;
 	private String courseName;
 	private String courseDescription;
 	
-	public Course(String courseTag, int courseNumber, String courseName, int primaryKey)
+	public Course(String primaryKey, String courseName, String courseTag, String courseNumber, String courseDescription)
 	{
 		super(primaryKey); 
 		this.courseTag = courseTag;
 		this.courseNumber = courseNumber;
 		this.courseName = courseName; 
-		 
+		this.courseDescription = courseDescription; 
 	}
 	
-	public void ChangeCourseNumber(int courseNumber)
+	public void ChangeCourseNumber(String courseNumber)
 	{
 		this.courseNumber = courseNumber;
 	}
 	
-	public int GetCourseNumber()
+	public String GetCourseNumber()
 	{
 		return this.courseNumber;
 	}
@@ -57,7 +57,7 @@ public class Course extends DatabaseObject{
 	
 	public String toString()
 	{
-		return courseTag + " " + Integer.toString(courseNumber) + " " + courseName + " " + courseDescription; 
+		return courseTag + " " + courseNumber + " " + courseName + " " + courseDescription; 
 	}
 
 }

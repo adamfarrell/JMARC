@@ -1,13 +1,13 @@
 
 public class DatabaseObject {
-	private int primaryKey;
+	private String primaryKey;
 	
-	public DatabaseObject(int primaryKey)
+	public DatabaseObject(String primaryKey)
 	{
 		this.primaryKey = primaryKey; 
 	}
 	
-	public int GetPrimaryKey()
+	public String GetPrimaryKey()
 	{
 		return this.primaryKey; 
 	}
