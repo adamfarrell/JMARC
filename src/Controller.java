@@ -143,7 +143,7 @@ public class Controller {
 	    	 	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
 	    	 	con = DriverManager.getConnection(connectionUrl);
 	    	 	//System.out.println("Database connection established");  	 
-	    	 	String SQL = "SELECT * FROM PROFESSOR";  
+	    	 	String SQL = "SELECT * FROM PROFESSOR WHERE hidden = 0";  
 	    	 	stmt = con.createStatement();  
 	    	 	rs = stmt.executeQuery(SQL);  
   
@@ -152,19 +152,19 @@ public class Controller {
          while (rs.next()) 
          {  
         	 /*Columns in PROFESSOR TABLE
-            professors.add(rs.getString(1));
-            professors.add(rs.getString(2));
-            professors.add(rs.getString(3));
-            professors.add(rs.getString(4));
-            professors.add(rs.getString(5));
-            professors.add(rs.getString(6));
-            professors.add(rs.getString(7));
+            professors.add(rs.getString(1)); --professorID
+            professors.add(rs.getString(2)); --firstName
+            professors.add(rs.getString(3)); --lastName
+            professors.add(rs.getString(4)); --status
+            professors.add(rs.getString(5)); --RequiredCreditHours
+            professors.add(rs.getString(6)); --releaseHours
+            professors.add(rs.getString(7)); --hidden
             */
         	//if professor is hidden 
-        	if(rs.getString(7) == "1")
-        		continue;
-            professorObj = new Professor(rs.getString(1),rs.getString(2),rs.getString(3)); 
-            professor.add(professorObj);
+        	
+        		professorObj = new Professor(rs.getString(1),rs.getString(2),rs.getString(3)); 
+        		professor.add(professorObj);
+        
          }
             
          con.close();  
@@ -193,7 +193,7 @@ public class Controller {
 	    	 	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
 	    	 	con = DriverManager.getConnection(connectionUrl);
 	    	 	//System.out.println("Database connection established");  	 
-	    	 	String SQL = "SELECT * FROM COURSE";  
+	    	 	String SQL = "SELECT * FROM COURSE WHERE hidden = 0";  
 	    	 	stmt = con.createStatement();  
 	    	 	rs = stmt.executeQuery(SQL);  
   
@@ -211,8 +211,7 @@ public class Controller {
             courses.add(rs.getString(7)); -- hidden
             */
         	//if course is hidden 
-            if(rs.getString(7)=="1")
-           	 continue;
+            
             courseObj = new Course(rs.getString(1),rs.getString(2),rs.getString(4),rs.getString(5),rs.getString(6)); 
             course.add(courseObj);
          }
@@ -242,7 +241,7 @@ public class Controller {
 	    	 	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
 	    	 	con = DriverManager.getConnection(connectionUrl);
 	    	 	//System.out.println("Database connection established");  	 
-	    	 	String SQL = "SELECT * FROM CAMPUS";  
+	    	 	String SQL = "SELECT * FROM CAMPUS WHERE hidden = 0";  
 	    	 	stmt = con.createStatement();  
 	    	 	rs = stmt.executeQuery(SQL);  
 
@@ -256,8 +255,7 @@ public class Controller {
          campuses.add(rs.getString(3)); -- address
          campuses.add(rs.getString(4)); -- hidden
          */
-         if(rs.getString(4)=="1")
-        	 continue;
+         
          campusObj = new Campus(rs.getString(1),rs.getString(2)); 
          campus.add(campusObj);
          
@@ -290,7 +288,7 @@ public class Controller {
 	    	 	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
 	    	 	con = DriverManager.getConnection(connectionUrl);
 	    	 	//System.out.println("Database connection established");  	 
-	    	 	String SQL = "SELECT * FROM BUILDING";  
+	    	 	String SQL = "SELECT * FROM BUILDING WHERE hidden = 0";  
 	    	 	stmt = con.createStatement();  
 	    	 	rs = stmt.executeQuery(SQL);  
 
@@ -306,8 +304,7 @@ public class Controller {
        buildings.add(rs.getString(5)); -- hidden
        */
     	//if building is hidden
-       if(rs.getString(5) == "1")
-    	   continue; 
+       
        buildingObj = new Building(rs.getString(1),rs.getString(4)); 
        building.add(buildingObj);
     }
@@ -338,7 +335,7 @@ public class Controller {
 	    	 	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
 	    	 	con = DriverManager.getConnection(connectionUrl);
 	    	 	//System.out.println("Database connection established");  	 
-	    	 	String SQL = "SELECT * FROM CLASSROOM";  
+	    	 	String SQL = "SELECT * FROM CLASSROOM WHERE hidden = 0";  
 	    	 	stmt = con.createStatement();  
 	    	 	rs = stmt.executeQuery(SQL);  
 
@@ -354,10 +351,7 @@ public class Controller {
         classrooms.add(rs.getString(5)); --	NumOfComps
         classrooms.add(rs.getString(6)); -- hidden
         */
-        if(rs.getString(6)=="1")
-        {
-        	continue; 
-        }
+     
         classroomObj = new Classroom(rs.getString(1),rs.getString(2)); 
         classroom.add(classroomObj);
         
@@ -490,17 +484,17 @@ public class Controller {
     // Iterate through the data in the result set and display it.  
     while (rs.next()) 
     {  
-       sections.add(rs.getString(1));
-       sections.add(rs.getString(2));
-       sections.add(rs.getString(3));
-       sections.add(rs.getString(4));
-       sections.add(rs.getString(5));
-       sections.add(rs.getString(6));
-       sections.add(rs.getString(7));
-       sections.add(rs.getString(8));
-       sections.add(rs.getString(9));
-       sections.add(rs.getString(10));
-       sections.add(rs.getString(11));
+    	sections.add(rs.getString(1)); // sectionID
+        sections.add(rs.getString(2)); // classroomID
+        sections.add(rs.getString(3)); // professorID
+        sections.add(rs.getString(4)); // courseID
+        sections.add(rs.getString(5)); // scheduleID
+        sections.add(rs.getString(6)); // startTime
+        sections.add(rs.getString(7)); // endTime
+        sections.add(rs.getString(8)); // startDate
+        sections.add(rs.getString(9)); // endDate
+        sections.add(rs.getString(10));// NumOfSeats
+        sections.add(rs.getString(11));// DaysOfWeek
        
        
     }
@@ -537,17 +531,17 @@ public class Controller {
    // Iterate through the data in the result set and display it.  
    while (rs.next()) 
    {  
-      sections.add(rs.getString(1));
-      sections.add(rs.getString(2));
-      sections.add(rs.getString(3));
-      sections.add(rs.getString(4));
-      sections.add(rs.getString(5));
-      sections.add(rs.getString(6));
-      sections.add(rs.getString(7));
-      sections.add(rs.getString(8));
-      sections.add(rs.getString(9));
-      sections.add(rs.getString(10));
-      sections.add(rs.getString(11));
+	   sections.add(rs.getString(1)); // sectionID
+       sections.add(rs.getString(2)); // classroomID
+       sections.add(rs.getString(3)); // professorID
+       sections.add(rs.getString(4)); // courseID
+       sections.add(rs.getString(5)); // scheduleID
+       sections.add(rs.getString(6)); // startTime
+       sections.add(rs.getString(7)); // endTime
+       sections.add(rs.getString(8)); // startDate
+       sections.add(rs.getString(9)); // endDate
+       sections.add(rs.getString(10));// NumOfSeats
+       sections.add(rs.getString(11));// DaysOfWeek
       
       
    }
@@ -566,7 +560,7 @@ public class Controller {
 		return sections; 
 	}
 	
-	public static ArrayList<String> getSectionsTime(String classroomID, String professorID){
+	public static ArrayList<String> getSectionsTimeProfessorID(String professorID){
 		
 		 ArrayList<String> sections = new ArrayList<String>();
 		 Connection con = null;  
@@ -576,7 +570,7 @@ public class Controller {
 	    	 	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
 	    	 	con = DriverManager.getConnection(connectionUrl);
 	    	 	//System.out.println("Database connection established");  	 
-	    	 	String SQL = "SELECT startTime, endTime FROM SECTION WHERE classroomID = " + classroomID + "AND professorID = " + professorID;  
+	    	 	String SQL = "SELECT startTime, endTime FROM SECTION WHERE professorID = " + professorID;  
 	    	 	stmt = con.createStatement();  
 	    	 	rs = stmt.executeQuery(SQL);  
 
@@ -584,8 +578,8 @@ public class Controller {
   // Iterate through the data in the result set and display it.  
   while (rs.next()) 
   {  
-     sections.add(rs.getString(1));
-     sections.add(rs.getString(2));
+     sections.add(rs.getString(1)); //startTime
+     sections.add(rs.getString(2)); //endTime
     
      
   }
@@ -593,6 +587,45 @@ public class Controller {
   con.close();  
      
   } catch (Exception ex) 
+	{ 
+	            // handle the error
+	        	 	System.err.println("Cannot connect to database server");
+	        	  	System.out.println("SQLException: " + ex.getMessage());
+	        	  	ex.printStackTrace(); 
+	        
+	 }
+		
+		return sections; 
+	}
+	
+	//
+	public static ArrayList<String> getSectionsTimeClassroomID(String classroomID){
+		
+		 ArrayList<String> sections = new ArrayList<String>();
+		 Connection con = null;  
+	     Statement stmt = null;  
+	     ResultSet rs = null;
+	     try {
+	    	 	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
+	    	 	con = DriverManager.getConnection(connectionUrl);
+	    	 	//System.out.println("Database connection established");  	 
+	    	 	String SQL = "SELECT startTime, endTime FROM SECTION WHERE classroomID = " + classroomID ;  
+	    	 	stmt = con.createStatement();  
+	    	 	rs = stmt.executeQuery(SQL);  
+
+
+ // Iterate through the data in the result set and display it.  
+ while (rs.next()) 
+ {  
+    sections.add(rs.getString(1)); //startTime
+    sections.add(rs.getString(2)); //endTime
+   
+    
+ }
+    
+ con.close();  
+    
+ } catch (Exception ex) 
 	{ 
 	            // handle the error
 	        	 	System.err.println("Cannot connect to database server");
@@ -1370,27 +1403,58 @@ public class Controller {
 		 test.clear();
 		 
 		 //getTimeSections(classroomID, professorID) get SECTION startTime & endTime W/classRoomID & professorID 
-		 test = getSectionsTime("76", "10"); 
+		 test = getSectionsTimeProfessorID("10"); 
 		 System.out.println(" ");
-		 System.out.println("________SECTION startTime & endTime W/classRoomID & professorID________");
+		 System.out.println("________SECTION startTime & endTime W/ professorID________");
 		 for(int i=0; i < test.size(); i++)
 		 {
-			if(i ==0)
-			{
+			
+			 if(i%2 == 0)
+			 {
 				System.out.print("Start Time: " + test.get(i)); 
 				System.out.print(", ");
-			}
-			else
-			{
-				System.out.print("End Time: " + test.get(i)); 
-			}
+			 }
+			 else
+				System.out.print("End Time: " + test.get(i)+" "); 
+		
 		 }
 		 test.clear();
 		 
 		 
+		 System.out.println(" ");
+		 test = getSectionsTimeClassroomID("1"); 
+		 System.out.println(" ");
+		 System.out.println("________SECTION startTime & endTime classRoomID________");
+		 for(int i=0; i < test.size(); i++)
+		 {
+			
+			 if(i%2 == 0)
+			 {
+				System.out.print("Start Time: " + test.get(i)); 
+				System.out.print(", ");
+			 }
+			 else
+				System.out.print("End Time: " + test.get(i)+" "); 
+		
+		 }
+		 test.clear();
+		 
 		 
 		//System.out.println("____________________This is an Insert into the professor table_____________________");
-		//insertProfessor("Riley","Painter","Ten","12", "7");
+		
+		 //insertProfessor("Riley","Painter","Ten","12", "7");
+		 
+		//Test Delete Professor by setting hidden equal to one then pull professor table
+		 
+		 System.out.println(" ");
+		 deleteProfessor("1");
+		 ArrayList<Professor> testDeleteProf = new ArrayList<Professor>();
+		 System.out.println(" ");
+		 System.out.println("________Get primarykey, firstname and lastname with professor Object from an Arraylist of Professor Objects________");
+		 testDeleteProf = getProfessors(); 
+		 for(int i =0; i < testDeleteProf.size(); i++)
+		   System.out.println(testDeleteProf.get(i).GetPrimaryKey() + " " +testDeleteProf.get(i).GetFirstName() + " " + testDeleteProf.get(i).GetLastName());
+		 
 		
 		
 	}
