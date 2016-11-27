@@ -415,6 +415,59 @@ public class Controller {
 		
 		return schedule; 
 	}
+	//Method return ArrayList of schedule Strings	
+
+		public static ArrayList<String> selectSchedules(String season, String year){
+			 
+			 ArrayList<String> schedule = new ArrayList<String>();
+			 //Schedule scheduleObj; 
+			 Connection con = null;  
+		     Statement stmt = null;  
+		     ResultSet rs = null;
+		     try {
+		    	 	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
+		    	 	con = DriverManager.getConnection(connectionUrl);
+		    	 	//System.out.println("Database connection established");  	 
+		    	 	String SQL = "SELECT s.semester, s.yearID, classroomID, professorID, courseID, startTime, endTime, startDate, endDate, NumOfSeats, DaysOfWeek FROM SCHEDULE s JOIN SECTION se ON s.scheduleID = se.scheduleID WHERE semester ="+"'"+season+"'"+"AND yearID = "+year;  
+		    	 	stmt = con.createStatement();  
+		    	 	rs = stmt.executeQuery(SQL);  
+
+
+	     // Iterate through the data in the result set and display it.  
+	     while (rs.next()) 
+	     {  
+	    	/* Columns in SCHEDULE TABLE */
+	        schedule.add(rs.getString(1)); // semester
+	        schedule.add(rs.getString(2)); // yearID
+	        schedule.add(rs.getString(3)); // classrooomID
+	        schedule.add(rs.getString(4)); // professorID
+	        schedule.add(rs.getString(5)); // courseID
+	        schedule.add(rs.getString(6)); // startTime
+	        schedule.add(rs.getString(7)); // endTime
+	        schedule.add(rs.getString(8)); // startDate
+	        schedule.add(rs.getString(9)); // endDate
+	        schedule.add(rs.getString(10));// NumOfSeats
+	        schedule.add(rs.getString(11));// DaysOfWeek
+	       
+	        
+	        //scheduleObj = new Schedule(rs.getString(1)); 
+	        //schedule.add(scheduleObj);
+	        
+	     }
+	        
+	     con.close();  
+	        
+	     } catch (Exception ex) 
+		       { 
+		            // handle the error
+		        	 	System.err.println("Cannot connect to database server");
+		        	  	System.out.println("SQLException: " + ex.getMessage());
+		        	  	ex.printStackTrace(); 
+		        
+		        }
+			
+			return schedule; 
+		}
 //Method Returning ArrayList of SECTION
 	public static ArrayList<Section> getSections(){
 		 ArrayList<Section> section = new ArrayList<Section>();
@@ -1455,6 +1508,24 @@ public class Controller {
 		 for(int i =0; i < testDeleteProf.size(); i++)
 		   System.out.println(testDeleteProf.get(i).GetPrimaryKey() + " " +testDeleteProf.get(i).GetFirstName() + " " + testDeleteProf.get(i).GetLastName());
 		 
+		 
+		 
+		 // Test creating whole schedule 
+		 ArrayList<String> Spri2017Sched = new ArrayList<String>(); 
+		 Spri2017Sched = selectSchedules("Spring", "2017");
+		 System.out.println(" ");
+		 System.out.println("________Complest Schedule Based on season and year________");
+		 for(int i=1; i <= Spri2017Sched.size(); i++)
+		 {
+			
+			System.out.print(Spri2017Sched.get(i-1)); 
+			System.out.print(", ");
+			if(i%11 == 0) 
+			{
+				System.out.println(" ");
+			}
+		 }
+		 test.clear();
 		
 		
 	}
