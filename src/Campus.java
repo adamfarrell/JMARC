@@ -8,11 +8,12 @@ public class Campus extends DatabaseObject
 	private String name; 
 	private ArrayList<Building> buildingList; 
 	
-	Campus(String primaryKey, String name)
+	Campus(String primaryKey, String name, ArrayList<Building> buildingList)
 	{
 		super(primaryKey);
 		this.name = name;
-		buildingList = new ArrayList<Building>();
+		this.buildingList = new ArrayList<Building>();
+		this.buildingList.addAll(buildingList); 
 		
 	}
 	

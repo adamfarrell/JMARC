@@ -5,11 +5,12 @@ public class Building extends DatabaseObject
 
 	private ArrayList<Classroom> innerArr; 
 	private String buildingTag; 
-	Building(String primaryKey, String buildingTag)
+	Building(String primaryKey, String buildingTag, ArrayList<Classroom> innerArr)
 	{
 		super(primaryKey);
 		this.buildingTag = buildingTag; 
-		innerArr = new ArrayList<Classroom>(); 
+		this.innerArr = new ArrayList<Classroom>();
+		innerArr.addAll(innerArr); 
 
 	}
 	public void SetBuildingTag(String buildingTag)

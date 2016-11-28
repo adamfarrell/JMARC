@@ -7,12 +7,14 @@ public class Professor extends DatabaseObject
 	private int fillerHours;
 	private int creditHours; 
 	
-	public Professor(String primaryKey ,String firstName, String lastName)
+	public Professor(String primaryKey ,String firstName, String lastName, int fillerHours, int creditHours)
 	{
 		super(primaryKey); 
 		
 		this.firstName = firstName;
 		this.lastName = lastName; 
+		this.fillerHours = fillerHours; 
+		this.creditHours = creditHours; 
 	}
 	
 	public void ChangeCreditHours(int numberOfCreditHours)
