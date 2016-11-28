@@ -57,7 +57,7 @@ public class Course extends DatabaseObject{
 	
 	public String toString()
 	{
-		return courseTag + " " + courseNumber + " " + courseName + " " + courseDescription; 
+		return courseTag + " " + courseNumber + " " + courseName; 
 	}
 
 }

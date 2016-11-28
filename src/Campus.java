@@ -49,7 +49,8 @@ public class Campus extends DatabaseObject
 	
 	public String toString()
 	{
-		return name + " " + super.GetPrimaryKey(); 
+//		return name + " " + super.GetPrimaryKey(); 
+		return name;
 	}
 
 }

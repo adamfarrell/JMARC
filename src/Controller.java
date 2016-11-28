@@ -14,8 +14,12 @@ import java.sql.Driver;
 
 public class Controller {
 
-
-	private static final  String connectionUrl = "jdbc:sqlserver://localhost\\SQL:4373;" +  "databaseName=SectionSchedule;user=James;password=Rpaint11";
+	private static final String user = "DefaultUser";
+	private static final String password = "password123";
+	private static final String databaseName = "SectionSchedule";
+	
+	private static final String connectionUrl = "jdbc:sqlserver://localhost\\SQL:4373;" + 
+			"databaseName=" + databaseName + ";user=" + user + ";password=" + password;
 	private static ArrayList<String> test = new ArrayList<String>();
 	private static Professor getSingleProfessor(String pk)
 	{
@@ -403,7 +407,7 @@ public class Controller {
         schedules.add(rs.getString(2)); -- semester
         schedules.add(rs.getString(3)); -- yearID
         */
-        scheduleObj = new Schedule(rs.getString(1)); 
+        scheduleObj = new Schedule(rs.getString(1), rs.getString(2), rs.getString(3)); 
         schedule.add(scheduleObj);
         
      }

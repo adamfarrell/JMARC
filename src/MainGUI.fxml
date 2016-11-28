@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Accordion?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUIController">
+   <top>
+      <MenuBar BorderPane.alignment="CENTER">
+        <menus>
+          <Menu mnemonicParsing="false" text="Assets">
+            <items>
+                  <Menu mnemonicParsing="false" text="New">
+                    <items>
+                      <MenuItem fx:id="newBuilding" mnemonicParsing="false" onAction="#addNewBuilding" text="Building" />
+                        <MenuItem fx:id="newCampus" mnemonicParsing="false" onAction="#addNewCampus" text="Campus" />
+                        <MenuItem fx:id="newClassroom" mnemonicParsing="false" onAction="#addNewClassroom" text="Classroom" />
+                        <MenuItem fx:id="newCourse" mnemonicParsing="false" onAction="#addNewCourse" text="Course" />
+                        <MenuItem fx:id="newProfessor" mnemonicParsing="false" onAction="#addNewProfessor" text="Professor" />
+                    </items>
+                  </Menu>
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Help">
+            <items>
+              <MenuItem mnemonicParsing="false" text="About" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+   </top>
+   <center>
+      <SplitPane dividerPositions="0.33444816053511706" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <items>
+            <Accordion maxWidth="300.0">
+              <panes>
+                <TitledPane animated="false" text="Buildings">
+                     <content>
+                        <ListView fx:id="buildingList" prefHeight="200.0" prefWidth="200.0" />
+                     </content>
+                </TitledPane>
+                <TitledPane animated="false" text="Campuses">
+                     <content>
+                        <ListView fx:id="campusList" prefHeight="200.0" prefWidth="200.0" />
+                     </content>
+                </TitledPane>
+                <TitledPane animated="false" text="Clasrooms">
+                     <content>
+                        <ListView fx:id="classroomList" prefHeight="200.0" prefWidth="200.0" />
+                     </content>
+                </TitledPane>
+                  <TitledPane animated="false" layoutX="10.0" layoutY="10.0" text="Courses">
+                     <content>
+                        <ListView fx:id="courseList" prefHeight="200.0" prefWidth="200.0" />
+                     </content>
+                  </TitledPane>
+                  <TitledPane animated="false" layoutX="10.0" layoutY="358.0" text="Professors">
+                     <content>
+                        <ListView fx:id="professorList" prefHeight="200.0" prefWidth="200.0" />
+                     </content>
+                  </TitledPane>
+              </panes>
+            </Accordion>
+            <ListView fx:id="scheduleList" prefHeight="200.0" prefWidth="200.0" />
+         </items>
+      </SplitPane>
+   </center>
+</BorderPane>
