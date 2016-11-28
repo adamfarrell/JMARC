@@ -58,8 +58,9 @@ public class Professor extends DatabaseObject
 	
 	public String toString()
 	{
-		return firstName + " " + lastName + " " + Integer.toString(creditHours) + " " + Integer.toString(fillerHours)
-		 + " " + super.GetPrimaryKey(); 
+//		return firstName + " " + lastName + " " + Integer.toString(creditHours) + " " + Integer.toString(fillerHours)
+//		 + " " + super.GetPrimaryKey(); 
+		return firstName + " " + lastName;
 	}
 	
 }

@@ -15,7 +15,8 @@ public class Classroom extends DatabaseObject{
 	
 	public String toString()
 	{
-		return roomNumber + " " + super.GetPrimaryKey(); 
+//		return roomNumber + " " + super.GetPrimaryKey(); 
+		return roomNumber;
 	}
 
 }
