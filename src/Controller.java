@@ -16,8 +16,8 @@ import java.util.List;
 
 public class Controller {
 
-	private static final String user = "James";
-	private static final String password = "Rpaint11";
+	private static final String user = "DefaultUser";
+	private static final String password = "password123";
 	private static final String databaseName = "SectionSchedule";
 	private static final String connectionUrl = "jdbc:sqlserver://localhost\\SQL:4373;" + 
 			"databaseName=" + databaseName + ";user=" + user + ";password=" + password;
