@@ -15,12 +15,13 @@ import java.sql.Driver;
 public class Controller {
 
 	private static final String user = "DefaultUser";
-	private static final String password = "password123";
+	private static final String password = "Password123";
 	private static final String databaseName = "SectionSchedule";
 	
 	private static final String connectionUrl = "jdbc:sqlserver://localhost\\SQL:4373;" + 
 			"databaseName=" + databaseName + ";user=" + user + ";password=" + password;
 	private static ArrayList<String> test = new ArrayList<String>();
+//Method that returns a Professor by professorPK	
 	private static Professor getSingleProfessor(String pk)
 	{
 		 Professor professorObj = null; 
@@ -39,7 +40,7 @@ public class Controller {
         // Iterate through the data in the result set and display it.  
         while (rs.next()) 
         {  
-          professorObj = new Professor(rs.getString(1),rs.getString(2),rs.getString(3)); 
+          professorObj = new Professor(rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(5), rs.getString(6)); 
            
         }
            
@@ -58,7 +59,7 @@ public class Controller {
 		
 	}
 	
-	
+//Method that returns a COURSE by coursePK	
 	private static Course getSingleCourse(String pk)
 	{
 		  
@@ -96,6 +97,7 @@ public class Controller {
 		return courseObj; 
 		
 	}
+//Method that returns a classroom object by the classroomPK	
 	private static Classroom getSingleClassroom(String pk)
 	{
 		  
@@ -115,7 +117,15 @@ public class Controller {
         // Iterate through the data in the result set and display it.  
         while (rs.next()) 
         {  
-        	classroomObj = new Classroom(rs.getString(1),rs.getString(2));  
+        	 /*Columns in CLASROOM TABLE
+            classrooms.add(rs.getString(1)); -- classroomID
+            classrooms.add(rs.getString(2)); -- classroomNO
+            classrooms.add(rs.getString(3)); -- buildingID
+            classrooms.add(rs.getString(4)); -- capacity
+            classrooms.add(rs.getString(5)); --	NumOfComps
+            classrooms.add(rs.getString(6)); -- hidden
+            */
+        	classroomObj = new Classroom(rs.getString(1),rs.getString(2),rs.getString(3), rs.getString(4), rs.getString(5));  
            
         }
            
@@ -134,6 +144,198 @@ public class Controller {
 		
 	}
 	
+	//Method that returns a Building object by the buildingID	
+		private static Building getSingleBuilding(String pk)
+		{
+			  
+			 Building buildingObj = null; 
+			 Connection con = null;  
+		     Statement stmt = null;  
+		     ResultSet rs = null;
+		     try {
+		    	 	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
+		    	 	con = DriverManager.getConnection(connectionUrl);
+		    	 	//System.out.println("Database connection established");  	 
+		    	 	String SQL = "SELECT * FROM BUILDING WHERE buildingID = " + pk;  
+		    	 	stmt = con.createStatement();  
+		    	 	rs = stmt.executeQuery(SQL);  
+	 
+	 
+	        // Iterate through the data in the result set and display it.  
+	        while (rs.next()) 
+	        {  
+	        	/*Columns of BUILDING TABLE
+	            buildings.add(rs.getString(1)); -- buildingID
+	            buildings.add(rs.getString(2)); -- campusID
+	            buildings.add(rs.getString(3)); -- title
+	            buildings.add(rs.getString(4)); -- buildingCode
+	            buildings.add(rs.getString(5)); -- hidden
+	            */
+	         	
+	            
+	            buildingObj = new Building(rs.getString(1),rs.getString(2), rs.getString(3),rs.getString(4),getBuildingClassrooms(rs.getString(1)));
+	        }
+	           
+	        con.close();  
+	           
+	        } catch (Exception ex) 
+		       { 
+		            // handle the error
+		        	 	System.err.println("Cannot connect to database server");
+		        	  	System.out.println("SQLException: " + ex.getMessage());
+		        	  	ex.printStackTrace(); 
+		        
+		        }
+			
+			return buildingObj; 
+			
+		}
+	
+//Method that Returns ArrayList<Classroom> by buildingPK	
+	private static ArrayList<Classroom> getBuildingClassrooms(String buildingPK)
+	{
+		  
+		 //Classroom classroomObj = null; 
+		 ArrayList<Classroom> buildingClassrooms = new ArrayList<Classroom>(); 
+		 Connection con = null;  
+	     Statement stmt = null;  
+	     ResultSet rs = null;
+	     try {
+	    	 	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
+	    	 	con = DriverManager.getConnection(connectionUrl);
+	    	 	//System.out.println("Database connection established");  	 
+	    	 	String SQL = "SELECT * FROM CLASSROOM WHERE buildingID = " + buildingPK;  
+	    	 	stmt = con.createStatement();  
+	    	 	rs = stmt.executeQuery(SQL);  
+ 
+ 
+        // Iterate through the data in the result set and display it.  
+        while (rs.next()) 
+        {  
+        	 /*Columns in CLASROOM TABLE
+            classrooms.add(rs.getString(1)); -- classroomID
+            classrooms.add(rs.getString(2)); -- classroomNO
+            classrooms.add(rs.getString(3)); -- buildingID
+            classrooms.add(rs.getString(4)); -- capacity
+            classrooms.add(rs.getString(5)); --	NumOfComps
+            classrooms.add(rs.getString(6)); -- hidden
+            */
+        	buildingClassrooms.add(new Classroom(rs.getString(1),rs.getString(2),rs.getString(3), rs.getString(4), rs.getString(5)));
+        	//classroomObj = new Classroom(rs.getString(1),rs.getString(2),rs.getString(3), rs.getString(4), rs.getString(5));  
+           
+        }
+           
+        con.close();  
+           
+        } catch (Exception ex) 
+	       { 
+	            // handle the error
+	        	 	System.err.println("Cannot connect to database server");
+	        	  	System.out.println("SQLException: " + ex.getMessage());
+	        	  	ex.printStackTrace(); 
+	        
+	        }
+		
+		return buildingClassrooms; 
+		
+	}
+//Method Returning an ArrayList of Section by scheduleID
+	public static ArrayList<Section> getScheduleSections(String scheduleID){
+		 ArrayList<Section> section = new ArrayList<Section>();
+		 Section sectionObj;
+		 Connection con = null;  
+	     Statement stmt = null;  
+	     ResultSet rs = null;
+	     try {
+	    	 	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
+	    	 	con = DriverManager.getConnection(connectionUrl);
+	    	 	//System.out.println("Database connection established");  	 
+	    	 	String SQL = "SELECT * FROM SECTION WHERE scheduleID = "+scheduleID;  
+	    	 	stmt = con.createStatement();  
+	    	 	rs = stmt.executeQuery(SQL);  
+
+   // Iterate through the data in the result set and display it.  
+   while (rs.next()) 
+   {
+      /*	Columns in SECTION TABLE	
+      sections.add(rs.getString(1)); -- sectionID
+      sections.add(rs.getString(2)); -- classroomID
+      sections.add(rs.getString(3)); -- professorID
+      sections.add(rs.getString(4)); -- courseID
+      sections.add(rs.getString(5)); -- scheduleID
+      sections.add(rs.getString(6)); -- startTime
+      sections.add(rs.getString(7)); -- endTime
+      sections.add(rs.getString(8)); -- startDate
+      sections.add(rs.getString(9)); -- endDate
+      sections.add(rs.getString(10));-- NumOfSeats
+      sections.add(rs.getString(11));-- DaysOfWeek
+      */
+      sectionObj = new Section(rs.getString(1),getSingleClassroom(rs.getString(2)),getSingleProfessor(rs.getString(3)), getSingleCourse(rs.getString(4)), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9),rs.getString(10), rs.getString(11)); 
+      section.add(sectionObj);
+      
+   }
+      
+   con.close();  
+      
+   } catch (Exception ex) 
+	       { 
+	            // handle the error
+	        	 	System.err.println("Cannot connect to database server");
+	        	  	System.out.println("SQLException: " + ex.getMessage());
+	        	  	ex.printStackTrace(); 
+	        
+	        }
+		
+		return section; 
+	}
+	// Method Returning Arraylist of Building with buildingID
+		public static ArrayList<Building> getCampusBuildings(String campusID){
+			
+			 ArrayList<Building> building = new ArrayList<Building>();
+			 Building buildingObj;
+			 
+			 
+			 Connection con = null;  
+		     Statement stmt = null;  
+		     ResultSet rs = null;
+		     try {
+		    	 	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
+		    	 	con = DriverManager.getConnection(connectionUrl);
+		    	 	//System.out.println("Database connection established");  	 
+		    	 	String SQL = "SELECT * FROM BUILDING WHERE hidden = 0 AND campusID ="+ campusID;  
+		    	 	stmt = con.createStatement();  
+		    	 	rs = stmt.executeQuery(SQL);  
+
+
+	    // Iterate through the data in the result set and display it.  
+	    while (rs.next()) 
+	    {  
+	    	/*Columns of BUILDING TABLE
+	       buildings.add(rs.getString(1)); -- buildingID
+	       buildings.add(rs.getString(2)); -- campusID
+	       buildings.add(rs.getString(3)); -- title
+	       buildings.add(rs.getString(4)); -- buildingCode
+	       buildings.add(rs.getString(5)); -- hidden
+	       */
+	    	//if building is hidden
+	       
+	       buildingObj = new Building(rs.getString(1),rs.getString(2), rs.getString(3),rs.getString(4),getBuildingClassrooms(rs.getString(1))); 
+	       building.add(buildingObj);
+	    }
+	       
+	    con.close();  
+	       
+	    } catch (Exception ex) 
+		       { 
+		            // handle the error
+		        	 	System.err.println("Cannot connect to database server");
+		        	  	System.out.println("SQLException: " + ex.getMessage());
+		        	  	ex.printStackTrace(); 
+		        
+		        }
+			
+			return building; 
+		}
 	
 //Method Returning Professor Table	
 	public static ArrayList<Professor> getProfessors()
@@ -166,7 +368,7 @@ public class Controller {
             */
         	//if professor is hidden 
         	
-        		professorObj = new Professor(rs.getString(1),rs.getString(2),rs.getString(3)); 
+        		professorObj = new Professor(rs.getString(1),rs.getString(2),rs.getString(3), rs.getString(5), rs.getString(6)); 
         		professor.add(professorObj);
         
          }
@@ -237,6 +439,8 @@ public class Controller {
 	public static ArrayList<Campus> getCampuses(){
 		
 		 ArrayList<Campus> campus = new ArrayList<Campus>();
+		 ArrayList<Building> building = new ArrayList<Building>();
+		 building = getBuildings();
 		 Campus campusObj; 
 		 Connection con = null;  
 	     Statement stmt = null;  
@@ -260,7 +464,7 @@ public class Controller {
          campuses.add(rs.getString(4)); -- hidden
          */
          
-         campusObj = new Campus(rs.getString(1),rs.getString(2)); 
+         campusObj = new Campus(rs.getString(1),rs.getString(2), getCampusBuildings(rs.getString(1))); 
          campus.add(campusObj);
          
       }
@@ -280,11 +484,12 @@ public class Controller {
 	}
 	
 // Method Returning Arraylist of Building
-	
 	public static ArrayList<Building> getBuildings(){
 		
 		 ArrayList<Building> building = new ArrayList<Building>();
 		 Building buildingObj;
+		 ArrayList<Classroom> classroom = new ArrayList<Classroom>(); 
+		 
 		 Connection con = null;  
 	     Statement stmt = null;  
 	     ResultSet rs = null;
@@ -307,9 +512,9 @@ public class Controller {
        buildings.add(rs.getString(4)); -- buildingCode
        buildings.add(rs.getString(5)); -- hidden
        */
-    	//if building is hidden
+    	
        
-       buildingObj = new Building(rs.getString(1),rs.getString(4)); 
+       buildingObj = new Building(rs.getString(1),rs.getString(2), rs.getString(3),rs.getString(4),getBuildingClassrooms(rs.getString(1))); 
        building.add(buildingObj);
     }
        
@@ -327,11 +532,11 @@ public class Controller {
 		return building; 
 	}
 	
-// Method returning Arralist of ClassroomObj
+// Method returning Arraylist of ClassroomObj
 	public static ArrayList<Classroom> getClassrooms(){
 		
 		 ArrayList<Classroom> classroom = new ArrayList<Classroom>();
-		 Classroom classroomObj; 
+		 //Classroom classroomObj; 
 		 Connection con = null;  
 	     Statement stmt = null;  
 	     ResultSet rs = null;
@@ -356,8 +561,8 @@ public class Controller {
         classrooms.add(rs.getString(6)); -- hidden
         */
      
-        classroomObj = new Classroom(rs.getString(1),rs.getString(2)); 
-        classroom.add(classroomObj);
+        //classroomObj = new Classroom(rs.getString(1),rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5)); 
+        classroom.add(new Classroom(rs.getString(1),rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5)));
         
      }
         
@@ -376,11 +581,11 @@ public class Controller {
 	}
 
 //Method return ArrayList of scheduleObj	
-
 	public static ArrayList<Schedule> getSchedules(){
 		 
 		 ArrayList<Schedule> schedule = new ArrayList<Schedule>();
-		 Schedule scheduleObj; 
+		 Schedule scheduleObj;
+		 ArrayList<Section> sections = new ArrayList<Section>(); 
 		 Connection con = null;  
 	     Statement stmt = null;  
 	     ResultSet rs = null;
@@ -401,7 +606,8 @@ public class Controller {
         schedules.add(rs.getString(2)); -- semester
         schedules.add(rs.getString(3)); -- yearID
         */
-        scheduleObj = new Schedule(rs.getString(1), rs.getString(2), rs.getString(3)); 
+    	 
+        scheduleObj = new Schedule(rs.getString(1), rs.getString(2), rs.getString(3), getScheduleSections(rs.getString(1))); 
         schedule.add(scheduleObj);
         
      }
@@ -419,59 +625,60 @@ public class Controller {
 		
 		return schedule; 
 	}
-	//Method return ArrayList of schedule Strings	
-
-		public static ArrayList<String> selectSchedules(String season, String year){
-			 
-			 ArrayList<String> schedule = new ArrayList<String>();
-			 //Schedule scheduleObj; 
-			 Connection con = null;  
-		     Statement stmt = null;  
-		     ResultSet rs = null;
-		     try {
-		    	 	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
-		    	 	con = DriverManager.getConnection(connectionUrl);
-		    	 	//System.out.println("Database connection established");  	 
-		    	 	String SQL = "SELECT s.semester, s.yearID, classroomID, professorID, courseID, startTime, endTime, startDate, endDate, NumOfSeats, DaysOfWeek FROM SCHEDULE s JOIN SECTION se ON s.scheduleID = se.scheduleID WHERE semester ="+"'"+season+"'"+"AND yearID = "+year;  
-		    	 	stmt = con.createStatement();  
-		    	 	rs = stmt.executeQuery(SQL);  
-
-
-	     // Iterate through the data in the result set and display it.  
-	     while (rs.next()) 
-	     {  
-	    	/* Columns in SCHEDULE TABLE */
-	        schedule.add(rs.getString(1)); // semester
-	        schedule.add(rs.getString(2)); // yearID
-	        schedule.add(rs.getString(3)); // classrooomID
-	        schedule.add(rs.getString(4)); // professorID
-	        schedule.add(rs.getString(5)); // courseID
-	        schedule.add(rs.getString(6)); // startTime
-	        schedule.add(rs.getString(7)); // endTime
-	        schedule.add(rs.getString(8)); // startDate
-	        schedule.add(rs.getString(9)); // endDate
-	        schedule.add(rs.getString(10));// NumOfSeats
-	        schedule.add(rs.getString(11));// DaysOfWeek
-	       
-	        
-	        //scheduleObj = new Schedule(rs.getString(1)); 
-	        //schedule.add(scheduleObj);
-	        
-	     }
-	        
-	     con.close();  
-	        
-	     } catch (Exception ex) 
-		       { 
-		            // handle the error
-		        	 	System.err.println("Cannot connect to database server");
-		        	  	System.out.println("SQLException: " + ex.getMessage());
-		        	  	ex.printStackTrace(); 
-		        
-		        }
-			
-			return schedule; 
-		}
+//
+////Method return ArrayList of schedule Strings	
+//	public static ArrayList<String> selectSchedules(String season, String year){
+//			 
+//			 ArrayList<String> schedule = new ArrayList<String>();
+//			 //Schedule scheduleObj; 
+//			 Connection con = null;  
+//		     Statement stmt = null;  
+//		     ResultSet rs = null;
+//		     try {
+//		    	 	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
+//		    	 	con = DriverManager.getConnection(connectionUrl);
+//		    	 	//System.out.println("Database connection established");  	 
+//		    	 	String SQL = "SELECT s.semester, s.yearID, classroomID, professorID, courseID, startTime, endTime, startDate, endDate, NumOfSeats, DaysOfWeek FROM SCHEDULE s JOIN SECTION se ON s.scheduleID = se.scheduleID WHERE semester ="+"'"+season+"'"+"AND yearID = "+year;  
+//		    	 	stmt = con.createStatement();  
+//		    	 	rs = stmt.executeQuery(SQL);  
+//
+//
+//	     // Iterate through the data in the result set and display it.  
+//	     while (rs.next()) 
+//	     {  
+//	    	/* Columns in SCHEDULE TABLE */
+//	        schedule.add(rs.getString(1)); // semester
+//	        schedule.add(rs.getString(2)); // yearID
+//	        schedule.add(rs.getString(3)); // classrooomID
+//	        schedule.add(rs.getString(4)); // professorID
+//	        schedule.add(rs.getString(5)); // courseID
+//	        schedule.add(rs.getString(6)); // startTime
+//	        schedule.add(rs.getString(7)); // endTime
+//	        schedule.add(rs.getString(8)); // startDate
+//	        schedule.add(rs.getString(9)); // endDate
+//	        schedule.add(rs.getString(10));// NumOfSeats
+//	        schedule.add(rs.getString(11));// DaysOfWeek
+//	       
+//	        
+//	        //scheduleObj = new Schedule(rs.getString(1)); 
+//	        //schedule.add(scheduleObj);
+//	        
+//	     }
+//	        
+//	     con.close();  
+//	        
+//	     } catch (Exception ex) 
+//		       { 
+//		            // handle the error
+//		        	 	System.err.println("Cannot connect to database server");
+//		        	  	System.out.println("SQLException: " + ex.getMessage());
+//		        	  	ex.printStackTrace(); 
+//		        
+//		        }
+//			
+//			return schedule; 
+//		}
+	
 //Method Returning ArrayList of SECTION
 	public static ArrayList<Section> getSections(){
 		 ArrayList<Section> section = new ArrayList<Section>();
@@ -1340,7 +1547,6 @@ public class Controller {
 				
 				
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 
 		 
 		 // updateProfessor Table in status column for professorID 1 
@@ -1353,7 +1559,7 @@ public class Controller {
 		 System.out.println("________Get primarykey, firstname and lastname with professor Object from an Arraylist of Professor Objects________");
 		 testProf = getProfessors(); 
 		 for(int i =0; i < testProf.size(); i++)
-		   System.out.println(testProf.get(i).GetPrimaryKey() + " " +testProf.get(i).GetFirstName() + " " + testProf.get(i).GetLastName());
+		   System.out.println(testProf.get(i).GetPrimaryKey() + " " +testProf.get(i).GetFirstName() + " " + testProf.get(i).GetLastName() + " " + testProf.get(i).GetFillerHours()+ " " + testProf.get(i).GetCreditHours());
  
 		//get all rows in the COURSE table and print it
 		 ArrayList<Course> testCourses = new ArrayList<Course>();
@@ -1372,13 +1578,58 @@ public class Controller {
 		 for(int i =0; i < testCampuses.size(); i++)
 		   System.out.println(testCampuses.get(i).GetPrimaryKey() + " " +testCampuses.get(i).GetName());
 		 
-		//get all rows in the BUILDING table and print it
+		 //print all buildings for each campus
+		 System.out.println("________Campus Bulidings for "+ testCampuses.get(0).GetName()+"___________");
+		 for(int i =0; i < testCampuses.get(0).GetBuildings().size(); i++)
+			   System.out.println(testCampuses.get(0).GetBuildings().get(i).GetBuildingTag() + " " +testCampuses.get(0).GetBuildings().get(i).GetCampusID());
+		 
+		 System.out.println("________Campus Bulidings for "+ testCampuses.get(1).GetName()+"___________");
+		 for(int i =0; i < testCampuses.get(1).GetBuildings().size(); i++)
+			   System.out.println(testCampuses.get(1).GetBuildings().get(i).GetBuildingTag() + " " +testCampuses.get(1).GetBuildings().get(i).GetCampusID());
+		 
+		 System.out.println("________Campus Bulidings for "+ testCampuses.get(2).GetName()+"___________");
+		 for(int i =0; i < testCampuses.get(2).GetBuildings().size(); i++)
+			   System.out.println(testCampuses.get(2).GetBuildings().get(i).GetBuildingTag() + " " +testCampuses.get(2).GetBuildings().get(i).GetCampusID());
+		 
+		 
+		 //get all rows in the BUILDING table and print it
 		 ArrayList<Building> testBuildings = new ArrayList<Building>();
 		 System.out.println(" ");
 		 System.out.println("________Get primarykey, Building title, BUILDING Object from an Arraylist of Building Objects________");
 		 testBuildings = getBuildings(); 
 		 for(int i =0; i < testBuildings.size(); i++)
-		   System.out.println(testBuildings.get(i).GetPrimaryKey() + " " +testBuildings.get(i).GetBuildingTag()); 
+		   System.out.println(testBuildings.get(i).GetPrimaryKey() + " " +testBuildings.get(i).GetBuildingTag()+
+				   				" "+testBuildings.get(i).GetBuildingTitle());
+		 
+		 //print all classrooms for each building
+		 System.out.println("___________________Building " + testBuildings.get(0).GetBuildingTitle() + " Classroom Numbers____________________");
+		 for(int i =0; i < testBuildings.get(0).GetClassrooms().size(); i++)
+			   System.out.println(testBuildings.get(0).GetClassrooms().get(i).GetRoomNumber());
+		 
+		 System.out.println("___________________Building " + testBuildings.get(1).GetBuildingTitle() + " Classroom Numbers____________________");
+		 for(int i =0; i < testBuildings.get(1).GetClassrooms().size(); i++)
+			   System.out.println(testBuildings.get(1).GetClassrooms().get(i).GetRoomNumber());
+		 
+		 System.out.println("___________________Building " + testBuildings.get(2).GetBuildingTitle() + " Classroom Numbers____________________");
+		 for(int i =0; i < testBuildings.get(2).GetClassrooms().size(); i++)
+			   System.out.println(testBuildings.get(2).GetClassrooms().get(i).GetRoomNumber());
+		 
+		 System.out.println("___________________Building " + testBuildings.get(3).GetBuildingTitle() + " Classroom Numbers____________________");
+		 for(int i =0; i < testBuildings.get(3).GetClassrooms().size(); i++)
+			   System.out.println(testBuildings.get(3).GetClassrooms().get(i).GetRoomNumber());
+		 
+		 System.out.println("___________________Building " + testBuildings.get(4).GetBuildingTitle() + " Classroom Numbers____________________");
+		 for(int i =0; i < testBuildings.get(4).GetClassrooms().size(); i++)
+			   System.out.println(testBuildings.get(4).GetClassrooms().get(i).GetRoomNumber());
+		 
+		 System.out.println("___________________Building " + testBuildings.get(5).GetBuildingTitle() + " Classroom Numbers____________________");
+		 for(int i =0; i < testBuildings.get(5).GetClassrooms().size(); i++)
+			   System.out.println(testBuildings.get(5).GetClassrooms().get(i).GetRoomNumber());
+		 
+		 System.out.println("___________________Building " + testBuildings.get(6).GetBuildingTitle() + " Classroom Numbers____________________");
+		 for(int i =0; i < testBuildings.get(6).GetClassrooms().size(); i++)
+			   System.out.println(testBuildings.get(6).GetClassrooms().get(i).GetRoomNumber());
+		 
 		 
 		//get all rows in the CLASSROOM table and print it
 		 ArrayList<Classroom> testClassrooms = new ArrayList<Classroom>();
@@ -1395,7 +1646,26 @@ public class Controller {
 		 System.out.println("________Get primarykey, SCHEDULE Object from an Arraylist of Schedule Objects________");
 		 testSchedules = getSchedules(); 
 		 for(int i =0; i < testSchedules.size(); i++)
-		   System.out.println(testSchedules.get(i).GetPrimaryKey());
+		   System.out.println(testSchedules.get(i).GetPrimaryKey()+" "+testSchedules.get(i).getSemester()+" "+testSchedules.get(i).getYear());
+		 
+		 System.out.println("________________Schedule: "+ testSchedules.get(15).getSemester()+" "+testSchedules.get(15).getYear()+"_____________________________");
+		 for(int i =0; i < testSchedules.get(15).getSections().size(); i++)
+			   System.out.println(  getSingleBuilding(testSchedules.get(15).getSections().get(i).getClassroom().GetBuildingID()).GetBuildingTag()+
+					   				", "+testSchedules.get(15).getSections().get(i).getClassroom().GetRoomNumber()+
+					   				", "+testSchedules.get(15).getSections().get(i).getProfessor().GetFirstName()+
+					   				" "+testSchedules.get(15).getSections().get(i).getProfessor().GetLastName()+
+					   				", "+testSchedules.get(15).getSections().get(i).getCourse().GetCourseTag()+
+					   				" "+testSchedules.get(15).getSections().get(i).getCourse().GetCourseNumber()+
+					   				" "+testSchedules.get(15).getSections().get(i).getCourse().GetCourseName()+
+					   				", "+testSchedules.get(15).getSections().get(i).getStartTime()+
+					   				", "+testSchedules.get(15).getSections().get(i).getEndTime()+
+					   				", "+testSchedules.get(15).getSections().get(i).getStartDate()+
+					   				", "+testSchedules.get(15).getSections().get(i).getEndDate()+
+					   				", "+testSchedules.get(15).getSections().get(i).getNumSeats()+
+					   				", "+testSchedules.get(15).getSections().get(i).getDaysOfWeek()
+					   				);
+		 
+		 
 		 
 		//get all rows in the SECTION table and print it
 		 ArrayList<Section> testSections = new ArrayList<Section>();
@@ -1513,12 +1783,12 @@ public class Controller {
 		   System.out.println(testDeleteProf.get(i).GetPrimaryKey() + " " +testDeleteProf.get(i).GetFirstName() + " " + testDeleteProf.get(i).GetLastName());
 		 
 		 
-		 
+		 /*
 		 // Test creating whole schedule 
 		 ArrayList<String> Spri2017Sched = new ArrayList<String>(); 
 		 Spri2017Sched = selectSchedules("Spring", "2017");
 		 System.out.println(" ");
-		 System.out.println("________Complest Schedule Based on season and year________");
+		 System.out.println("________Complete Schedule Based on season and year________");
 		 for(int i=1; i <= Spri2017Sched.size(); i++)
 		 {
 			
@@ -1530,6 +1800,11 @@ public class Controller {
 			}
 		 }
 		 test.clear();
+		 
+		 //Test Schedule
+		 ArrayList<Schedule> schedule = new ArrayList<Schedule>(); 
+		 
+		 */
 		
 		
 	}

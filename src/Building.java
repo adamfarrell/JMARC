@@ -4,28 +4,41 @@ public class Building extends DatabaseObject
 {
 
 	private ArrayList<Classroom> innerArr; 
-	private String buildingTag; 
-	Building(String primaryKey, String buildingTag, ArrayList<Classroom> innerArr)
+	private String buildingCode;
+	private String campusID; 
+	private String title;
+	Building(String primaryKey,String campusID ,String title, String buildingCode , ArrayList<Classroom> innerArr)
 	{
 		super(primaryKey);
-		this.buildingTag = buildingTag; 
+		this.campusID = campusID; 
+		this.buildingCode = buildingCode; 
+		this.title = title; 
 		this.innerArr = new ArrayList<Classroom>();
-		innerArr.addAll(innerArr); 
+		//innerArr.addAll(innerArr);
+		this.innerArr = innerArr; 
 
 	}
 	public void SetBuildingTag(String buildingTag)
 	{
-		this.buildingTag = buildingTag; 
+		this.buildingCode = buildingCode; 
 	}
 	
 	public String GetBuildingTag()
 	{
-		return buildingTag; 
+		return buildingCode; 
+	}
+	public String GetBuildingTitle()
+	{
+		return title; 
+	}
+	public String GetCampusID()
+	{
+		return campusID; 
 	}
 	
 	public String toString()
 	{
-		return buildingTag + " " + super.GetPrimaryKey(); 
+		return buildingCode + " " + super.GetPrimaryKey(); 
 	}
 	
 	public void AddClassroom(Classroom toAdd)
@@ -50,5 +63,9 @@ public class Building extends DatabaseObject
 	public Classroom GetClassroom(int index)
 	{
 		return innerArr.get(index); 
+	}
+	public ArrayList<Classroom> GetClassrooms()
+	{
+		return innerArr; 
 	}
 }

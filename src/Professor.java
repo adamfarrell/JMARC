@@ -4,10 +4,10 @@ public class Professor extends DatabaseObject
 	
 	private String firstName; 
 	private String lastName;
-	private int fillerHours;
-	private int creditHours; 
+	private String fillerHours;
+	private String creditHours; 
 	
-	public Professor(String primaryKey ,String firstName, String lastName, int fillerHours, int creditHours)
+	public Professor(String primaryKey ,String firstName, String lastName, String fillerHours, String creditHours)
 	{
 		super(primaryKey); 
 		
@@ -19,12 +19,12 @@ public class Professor extends DatabaseObject
 	
 	public void ChangeCreditHours(int numberOfCreditHours)
 	{
-		this.creditHours = numberOfCreditHours; 
+		this.creditHours = String.valueOf(numberOfCreditHours); 
 	}
 	
 	public int GetCreditHours()
 	{
-		return creditHours; 
+		return Integer.valueOf(creditHours); 
 	}
 	
 	public void ChangeFirstName(String firstName)
@@ -49,12 +49,12 @@ public class Professor extends DatabaseObject
 	
 	public void ChangeFillerHours(int numberOfFillerHours)
 	{
-		this.fillerHours = numberOfFillerHours; 
+		this.fillerHours = String.valueOf(numberOfFillerHours); 
 	}
 	
 	public int GetFillerHours()
 	{
-		return fillerHours; 
+		return Integer.valueOf(fillerHours); 
 	}
 	
 	

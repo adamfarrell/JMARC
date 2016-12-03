@@ -1,13 +1,17 @@
 
 public class Classroom extends DatabaseObject{
 	private String roomNumber;
-	private String buildingTag; 
+	private String buildingID; 
+	private String capacity; 
+	private String NumOfComps;
 	
-	public Classroom(String primaryKey, String roomNumber, String buildingTag)
+	public Classroom(String primaryKey, String roomNumber, String buildingID, String capacity, String NumOfComps)
 	{
 		super(primaryKey);
 		this.roomNumber = roomNumber; 
-		this.buildingTag = buildingTag; 
+		this.buildingID = buildingID;
+		this.capacity = capacity; 
+		this.NumOfComps = NumOfComps; 
 	}
 	
 	public String GetRoomNumber()
@@ -15,15 +19,22 @@ public class Classroom extends DatabaseObject{
 		return roomNumber; 
 	}
 	
-	public String GetBuildingTag()
+	public String GetBuildingID()
 	{
-		return this.buildingTag; 
+		return this.buildingID; 
 	}
-	
+	public String GetCapacity()
+	{
+		return this.capacity; 
+	}
+	public String GetNumOfComps()
+	{
+		return this.NumOfComps; 
+	}
 	public String toString()
 	{
 //		return roomNumber + " " + super.GetPrimaryKey(); 
-		return roomNumber + " " + buildingTag;
+		return roomNumber + " " + buildingID+ " " + capacity + " " + NumOfComps;
 	}
 	
 

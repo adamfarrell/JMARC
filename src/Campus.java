@@ -36,6 +36,10 @@ public class Campus extends DatabaseObject
 	{
 		return buildingList.get(index); 
 	}
+	public ArrayList<Building> GetBuildings()
+	{
+		return buildingList; 
+	}
 	
 	public void RemoveBuilding(String primaryKey)
 	{
