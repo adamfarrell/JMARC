@@ -6,7 +6,12 @@ import java.sql.ResultSet;
 import java.sql.Statement; 
 import java.util.*; 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
+import java.nio.file.Path;
 import java.util.List;
+import javax.swing.JOptionPane;
+import java.lang.Object; 
 //import com.mysql.jdbc.Statement;
 
 //import com.mysql.jdbc.PreparedStatement;
@@ -19,24 +24,70 @@ public class Controller {
 	private static final String user = "DefaultUser";
 	private static final String password = "password123";
 	private static final String databaseName = "SectionSchedule";
-	private static final String connectionUrl = "jdbc:sqlserver://localhost\\SQL:4373;" + 
+	private static final String databasePort = "4373";
+	private static final String connectionUrl = "jdbc:sqlserver://localhost\\SQL:"+databasePort+";" + 
 			"databaseName=" + databaseName + ";user=" + user + ";password=" + password;
 	
-	private static final String fileName = "SectionSchedule";
-	private static final String userDirectory = "JamesPainter";
-	private static final String csvFile = "/Users/"+userDirectory+"/Desktop/"+fileName+".csv";
+	
+//	private static final String fileName = "SectionSchedule";
+//	private static final String userDirectory = "JamesPainter";
+//	private static final String csvFile = "/Users/"+userDirectory+"/Desktop/"+fileName+".csv";
+private static Connection con; 
+	
+//Open connection 
+		private static void openConnection()
+		{
+			 
+			try {
+	    	 	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
+	    	 	con = DriverManager.getConnection(connectionUrl);
+	    	 
+           
+        
+           
+        } catch (Exception ex) 
+	       { 
+	            // handle the error
+	        	 	System.err.println("Cannot connect to database server");
+	        	  	System.out.println("SQLException: " + ex.getMessage());
+	        	  	ex.printStackTrace(); 
+	        
+	        }
+			
+			
+		}
+	
 
+		
+//Close SQL Connection 
+		private static void closeConnection()
+		{
+			 
+			try {
+	    	
+					con.close();  
+           
+        } catch (Exception ex) 
+	       { 
+	            // handle the error
+	        	 	System.err.println("Cannot connect to database server");
+	        	  	System.out.println("SQLException: " + ex.getMessage());
+	        	  	ex.printStackTrace(); 
+	        
+	        }
+			
+			
+		}
+	
 //Method that returns a Professor by professorPK	
 	private static Professor getSingleProfessor(String pk)
 	{
 		 Professor professorObj = null; 
-		 Connection con = null;  
+		 //Connection con = null;  
 	     Statement stmt = null;  
 	     ResultSet rs = null;
 	     try {
-	    	 	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
-	    	 	con = DriverManager.getConnection(connectionUrl);
-	    	 	//System.out.println("Database connection established");  	 
+	      	 
 	    	 	String SQL = "SELECT * FROM PROFESSOR WHERE professorID = " + pk;  
 	    	 	stmt = con.createStatement();  
 	    	 	rs = stmt.executeQuery(SQL);  
@@ -48,8 +99,7 @@ public class Controller {
           professorObj = new Professor(rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(5), rs.getString(6)); 
            
         }
-           
-        con.close();  
+            
            
         } catch (Exception ex) 
 	       { 
@@ -69,26 +119,24 @@ public class Controller {
 	{
 		  
 		 Course courseObj = null; 
-		 Connection con = null;  
+		 //Connection con = null;  
 	     Statement stmt = null;  
 	     ResultSet rs = null;
 	     try {
-	    	 	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
-	    	 	con = DriverManager.getConnection(connectionUrl);
-	    	 	//System.out.println("Database connection established");  	 
+	    	  	 
 	    	 	String SQL = "SELECT * FROM COURSE WHERE courseID = " + pk;  
 	    	 	stmt = con.createStatement();  
 	    	 	rs = stmt.executeQuery(SQL);  
  
  
-        // Iterate through the data in the result set and display it.  
-        while (rs.next()) 
-        {  
-        	courseObj = new Course(rs.getString(1),rs.getString(2),rs.getString(4),rs.getString(5),rs.getString(6));  
+		        // Iterate through the data in the result set and display it.  
+		        while (rs.next()) 
+		        {  
+		        	courseObj = new Course(rs.getString(1),rs.getString(2),rs.getString(4),rs.getString(5),rs.getString(6));  
+		           
+		        }
            
-        }
-           
-        con.close();  
+          
            
         } catch (Exception ex) 
 	       { 
@@ -107,34 +155,31 @@ public class Controller {
 	{
 		  
 		 Classroom classroomObj = null; 
-		 Connection con = null;  
+		// Connection con = null;  
 	     Statement stmt = null;  
 	     ResultSet rs = null;
 	     try {
-	    	 	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
-	    	 	con = DriverManager.getConnection(connectionUrl);
-	    	 	//System.out.println("Database connection established");  	 
+	    	  	 
 	    	 	String SQL = "SELECT * FROM CLASSROOM WHERE classroomID = " + pk;  
 	    	 	stmt = con.createStatement();  
 	    	 	rs = stmt.executeQuery(SQL);  
  
  
-        // Iterate through the data in the result set and display it.  
-        while (rs.next()) 
-        {  
-        	 /*Columns in CLASROOM TABLE
-            classrooms.add(rs.getString(1)); -- classroomID
-            classrooms.add(rs.getString(2)); -- classroomNO
-            classrooms.add(rs.getString(3)); -- buildingID
-            classrooms.add(rs.getString(4)); -- capacity
-            classrooms.add(rs.getString(5)); --	NumOfComps
-            classrooms.add(rs.getString(6)); -- hidden
-            */
-        	classroomObj = new Classroom(rs.getString(1),rs.getString(2),rs.getString(3), rs.getString(4), rs.getString(5));  
-           
-        }
-           
-        con.close();  
+		        // Iterate through the data in the result set and display it.  
+		        while (rs.next()) 
+		        {  
+		        	 /*Columns in CLASROOM TABLE
+		            classrooms.add(rs.getString(1)); -- classroomID
+		            classrooms.add(rs.getString(2)); -- classroomNO
+		            classrooms.add(rs.getString(3)); -- buildingID
+		            classrooms.add(rs.getString(4)); -- capacity
+		            classrooms.add(rs.getString(5)); --	NumOfComps
+		            classrooms.add(rs.getString(6)); -- hidden
+		            */
+		        	classroomObj = new Classroom(rs.getString(1),rs.getString(2),rs.getString(3), rs.getString(4), rs.getString(5));  
+		           
+		        }
+             
            
         } catch (Exception ex) 
 	       { 
@@ -154,32 +199,30 @@ public class Controller {
 		{
 			  
 			 Building buildingObj = null; 
-			 Connection con = null;  
+			// Connection con = null;  
 		     Statement stmt = null;  
 		     ResultSet rs = null;
 		     try {
-		    	 	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
-		    	 	con = DriverManager.getConnection(connectionUrl);
-		    	 	//System.out.println("Database connection established");  	 
+		    	  	 
 		    	 	String SQL = "SELECT * FROM BUILDING WHERE buildingID = " + pk;  
 		    	 	stmt = con.createStatement();  
 		    	 	rs = stmt.executeQuery(SQL);  
 	 
 	 
-	        // Iterate through the data in the result set and display it.  
-	        while (rs.next()) 
-	        {  
-	        	/*Columns of BUILDING TABLE
-	            buildings.add(rs.getString(1)); -- buildingID
-	            buildings.add(rs.getString(2)); -- campusID
-	            buildings.add(rs.getString(3)); -- title
-	            buildings.add(rs.getString(4)); -- buildingCode
-	            buildings.add(rs.getString(5)); -- hidden
-	            */
-	            buildingObj = new Building(rs.getString(1),rs.getString(2), rs.getString(3),rs.getString(4),getBuildingClassrooms(rs.getString(1)));
-	        }
+			        // Iterate through the data in the result set and display it.  
+			        while (rs.next()) 
+			        {  
+			        	/*Columns of BUILDING TABLE
+			            buildings.add(rs.getString(1)); -- buildingID
+			            buildings.add(rs.getString(2)); -- campusID
+			            buildings.add(rs.getString(3)); -- title
+			            buildings.add(rs.getString(4)); -- buildingCode
+			            buildings.add(rs.getString(5)); -- hidden
+			            */
+			            buildingObj = new Building(rs.getString(1),rs.getString(2), rs.getString(3),rs.getString(4),getBuildingClassrooms(rs.getString(1)));
+			        }
 	           
-	        con.close();  
+//	         
 	           
 	        } catch (Exception ex) 
 		       { 
@@ -200,35 +243,33 @@ public class Controller {
 		  
 		 //Classroom classroomObj = null; 
 		 ArrayList<Classroom> buildingClassrooms = new ArrayList<Classroom>(); 
-		 Connection con = null;  
+		 //Connection con = null;  
 	     Statement stmt = null;  
 	     ResultSet rs = null;
 	     try {
-	    	 	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
-	    	 	con = DriverManager.getConnection(connectionUrl);
-	    	 	//System.out.println("Database connection established");  	 
+	    	  	 
 	    	 	String SQL = "SELECT * FROM CLASSROOM WHERE buildingID = " + buildingPK;  
 	    	 	stmt = con.createStatement();  
 	    	 	rs = stmt.executeQuery(SQL);  
  
  
-        // Iterate through the data in the result set and display it.  
-        while (rs.next()) 
-        {  
-        	 /*Columns in CLASROOM TABLE
-            classrooms.add(rs.getString(1)); -- classroomID
-            classrooms.add(rs.getString(2)); -- classroomNO
-            classrooms.add(rs.getString(3)); -- buildingID
-            classrooms.add(rs.getString(4)); -- capacity
-            classrooms.add(rs.getString(5)); --	NumOfComps
-            classrooms.add(rs.getString(6)); -- hidden
-            */
-        	buildingClassrooms.add(new Classroom(rs.getString(1),rs.getString(2),rs.getString(3), rs.getString(4), rs.getString(5)));
-        	//classroomObj = new Classroom(rs.getString(1),rs.getString(2),rs.getString(3), rs.getString(4), rs.getString(5));  
+	    	 	// Iterate through the data in the result set and display it.  
+		        while (rs.next()) 
+		        {  
+		        	 /*Columns in CLASROOM TABLE
+		            classrooms.add(rs.getString(1)); -- classroomID
+		            classrooms.add(rs.getString(2)); -- classroomNO
+		            classrooms.add(rs.getString(3)); -- buildingID
+		            classrooms.add(rs.getString(4)); -- capacity
+		            classrooms.add(rs.getString(5)); --	NumOfComps
+		            classrooms.add(rs.getString(6)); -- hidden
+		            */
+		        	buildingClassrooms.add(new Classroom(rs.getString(1),rs.getString(2),rs.getString(3), rs.getString(4), rs.getString(5)));
+		        	//classroomObj = new Classroom(rs.getString(1),rs.getString(2),rs.getString(3), rs.getString(4), rs.getString(5));  
+		           
+		        }
            
-        }
-           
-        con.close();  
+       // con.close();  
            
         } catch (Exception ex) 
 	       { 
@@ -246,39 +287,37 @@ public class Controller {
 	public static ArrayList<Section> getScheduleSections(String scheduleID){
 		 ArrayList<Section> section = new ArrayList<Section>();
 		 Section sectionObj;
-		 Connection con = null;  
+		// Connection con = null;  
 	     Statement stmt = null;  
 	     ResultSet rs = null;
 	     try {
-	    	 	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
-	    	 	con = DriverManager.getConnection(connectionUrl);
-	    	 	//System.out.println("Database connection established");  	 
+	    	  	 
 	    	 	String SQL = "SELECT * FROM SECTION WHERE scheduleID = "+scheduleID;  
 	    	 	stmt = con.createStatement();  
 	    	 	rs = stmt.executeQuery(SQL);  
 
-   // Iterate through the data in the result set and display it.  
-   while (rs.next()) 
-   {
-      /*	Columns in SECTION TABLE	
-      sections.add(rs.getString(1)); -- sectionID
-      sections.add(rs.getString(2)); -- classroomID
-      sections.add(rs.getString(3)); -- professorID
-      sections.add(rs.getString(4)); -- courseID
-      sections.add(rs.getString(5)); -- scheduleID
-      sections.add(rs.getString(6)); -- startTime
-      sections.add(rs.getString(7)); -- endTime
-      sections.add(rs.getString(8)); -- startDate
-      sections.add(rs.getString(9)); -- endDate
-      sections.add(rs.getString(10));-- NumOfSeats
-      sections.add(rs.getString(11));-- DaysOfWeek
-      */
-      sectionObj = new Section(rs.getString(1),getSingleClassroom(rs.getString(2)),getSingleProfessor(rs.getString(3)), getSingleCourse(rs.getString(4)), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9),rs.getString(10), rs.getString(11)); 
-      section.add(sectionObj);
+			   // Iterate through the data in the result set and display it.  
+			   while (rs.next()) 
+			   {
+			      /*	Columns in SECTION TABLE	
+			      sections.add(rs.getString(1)); -- sectionID
+			      sections.add(rs.getString(2)); -- classroomID
+			      sections.add(rs.getString(3)); -- professorID
+			      sections.add(rs.getString(4)); -- courseID
+			      sections.add(rs.getString(5)); -- scheduleID
+			      sections.add(rs.getString(6)); -- startTime
+			      sections.add(rs.getString(7)); -- endTime
+			      sections.add(rs.getString(8)); -- startDate
+			      sections.add(rs.getString(9)); -- endDate
+			      sections.add(rs.getString(10));-- NumOfSeats
+			      sections.add(rs.getString(11));-- DaysOfWeek
+			      */
+			      sectionObj = new Section(rs.getString(1),getSingleClassroom(rs.getString(2)),getSingleProfessor(rs.getString(3)), getSingleCourse(rs.getString(4)), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9),rs.getString(10), rs.getString(11)); 
+			      section.add(sectionObj);
+			      
+			   }
       
-   }
-      
-   con.close();  
+    
       
    } catch (Exception ex) 
 	       { 
@@ -298,13 +337,11 @@ public class Controller {
 			 Building buildingObj;
 			 
 			 
-			 Connection con = null;  
+			// Connection con = null;  
 		     Statement stmt = null;  
 		     ResultSet rs = null;
 		     try {
-		    	 	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
-		    	 	con = DriverManager.getConnection(connectionUrl);
-		    	 	//System.out.println("Database connection established");  	 
+		    	 	 
 		    	 	String SQL = "SELECT * FROM BUILDING WHERE hidden = 0 AND campusID ="+ campusID;  
 		    	 	stmt = con.createStatement();  
 		    	 	rs = stmt.executeQuery(SQL);  
@@ -326,7 +363,7 @@ public class Controller {
 	       building.add(buildingObj);
 	    }
 	       
-	    con.close();  
+	    
 	       
 	    } catch (Exception ex) 
 		       { 
@@ -344,39 +381,33 @@ public class Controller {
 	public static ArrayList<Professor> getProfessors()
 	{
 		 ArrayList<Professor> professor = new ArrayList<Professor>();
-		 Professor professorObj; 
-		 Connection con = null;  
+		 Professor professorObj;  
 	     Statement stmt = null;  
 	     ResultSet rs = null;
 	     try {
-	    	 	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
-	    	 	con = DriverManager.getConnection(connectionUrl);
-	    	 	//System.out.println("Database connection established");  	 
+	    	   	 
 	    	 	String SQL = "SELECT * FROM PROFESSOR WHERE hidden = 0";  
 	    	 	stmt = con.createStatement();  
 	    	 	rs = stmt.executeQuery(SQL);  
   
-  
-         // Iterate through the data in the result set and display it.  
-         while (rs.next()) 
-         {  
-        	 /*Columns in PROFESSOR TABLE
-            professors.add(rs.getString(1)); --professorID
-            professors.add(rs.getString(2)); --firstName
-            professors.add(rs.getString(3)); --lastName
-            professors.add(rs.getString(4)); --status
-            professors.add(rs.getString(5)); --RequiredCreditHours
-            professors.add(rs.getString(6)); --releaseHours
-            professors.add(rs.getString(7)); --hidden
-            */
-        	//if professor is hidden 
-        	
-        		professorObj = new Professor(rs.getString(1),rs.getString(2),rs.getString(3), rs.getString(5), rs.getString(6)); 
-        		professor.add(professorObj);
-        
-         }
-            
-         con.close();  
+	    	 	// Iterate through the data in the result set and display it.  
+		         while (rs.next()) 
+		         {  
+		        	 /*Columns in PROFESSOR TABLE
+		            professors.add(rs.getString(1)); --professorID
+		            professors.add(rs.getString(2)); --firstName
+		            professors.add(rs.getString(3)); --lastName
+		            professors.add(rs.getString(4)); --status
+		            professors.add(rs.getString(5)); --RequiredCreditHours
+		            professors.add(rs.getString(6)); --releaseHours
+		            professors.add(rs.getString(7)); --hidden
+		            */
+		        	//if professor is hidden 
+		        	
+		        		professorObj = new Professor(rs.getString(1),rs.getString(2),rs.getString(3), rs.getString(5), rs.getString(6)); 
+		        		professor.add(professorObj);
+		        
+		         }  
             
          } catch (Exception ex) 
 	       { 
@@ -394,38 +425,34 @@ public class Controller {
 	public static ArrayList<Course> getCourses()
 	{
 		 ArrayList<Course> course = new ArrayList<Course>();
-		 Course courseObj; 
-		 Connection con = null;  
+		 Course courseObj;   
 	     Statement stmt = null;  
 	     ResultSet rs = null;
 	     try {
-	    	 	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
-	    	 	con = DriverManager.getConnection(connectionUrl);
-	    	 	//System.out.println("Database connection established");  	 
+	    	   	 
 	    	 	String SQL = "SELECT * FROM COURSE WHERE hidden = 0";  
 	    	 	stmt = con.createStatement();  
 	    	 	rs = stmt.executeQuery(SQL);  
   
   
-         // Iterate through the data in the result set and display it.  
-         while (rs.next()) 
-         {  
-        	/*Columns oF COURSE TABLE
-            courses.add(rs.getString(1)); -- courseID
-            courses.add(rs.getString(2)); -- title
-            courses.add(rs.getString(3)); -- creditHours
-            courses.add(rs.getString(4)); -- prefix
-            courses.add(rs.getString(5)); -- courseNo
-            courses.add(rs.getString(6)); -- description
-            courses.add(rs.getString(7)); -- hidden
-            */
-        	//if course is hidden 
+		         // Iterate through the data in the result set and display it.  
+		         while (rs.next()) 
+		         {  
+		        	/*Columns oF COURSE TABLE
+		            courses.add(rs.getString(1)); -- courseID
+		            courses.add(rs.getString(2)); -- title
+		            courses.add(rs.getString(3)); -- creditHours
+		            courses.add(rs.getString(4)); -- prefix
+		            courses.add(rs.getString(5)); -- courseNo
+		            courses.add(rs.getString(6)); -- description
+		            courses.add(rs.getString(7)); -- hidden
+		            */
+		        	//if course is hidden 
+		            
+		            courseObj = new Course(rs.getString(1),rs.getString(2),rs.getString(4),rs.getString(5),rs.getString(6)); 
+		            course.add(courseObj);
+		         }
             
-            courseObj = new Course(rs.getString(1),rs.getString(2),rs.getString(4),rs.getString(5),rs.getString(6)); 
-            course.add(courseObj);
-         }
-            
-         con.close();  
             
          } catch (Exception ex) 
 	       { 
@@ -442,35 +469,31 @@ public class Controller {
 	public static ArrayList<Campus> getCampuses(){
 		
 		 ArrayList<Campus> campus = new ArrayList<Campus>();
-		 Campus campusObj; 
-		 Connection con = null;  
+		 Campus campusObj;   
 	     Statement stmt = null;  
 	     ResultSet rs = null;
 	     try {
-	    	 	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
-	    	 	con = DriverManager.getConnection(connectionUrl);
-	    	 	//System.out.println("Database connection established");  	 
 	    	 	String SQL = "SELECT * FROM CAMPUS WHERE hidden = 0";  
 	    	 	stmt = con.createStatement();  
 	    	 	rs = stmt.executeQuery(SQL);  
 
 
-      // Iterate through the data in the result set and display it.  
-      while (rs.next()) 
-      {  
-    	  /*Columns of CAMPUS TABLE
-         campuses.add(rs.getString(1)); -- campusID
-         campuses.add(rs.getString(2)); -- title
-         campuses.add(rs.getString(3)); -- address
-         campuses.add(rs.getString(4)); -- hidden
-         */
+			      // Iterate through the data in the result set and display it.  
+			      while (rs.next()) 
+			      {  
+			    	  /*Columns of CAMPUS TABLE
+			         campuses.add(rs.getString(1)); -- campusID
+			         campuses.add(rs.getString(2)); -- title
+			         campuses.add(rs.getString(3)); -- address
+			         campuses.add(rs.getString(4)); -- hidden
+			         */
+			         
+			         campusObj = new Campus(rs.getString(1),rs.getString(2), getCampusBuildings(rs.getString(1))); 
+			         campus.add(campusObj);
+			         
+			      }
          
-         campusObj = new Campus(rs.getString(1),rs.getString(2), getCampusBuildings(rs.getString(1))); 
-         campus.add(campusObj);
-         
-      }
-         
-      con.close();  
+  
          
       } catch (Exception ex) 
 	       { 
@@ -490,35 +513,32 @@ public class Controller {
 		 ArrayList<Building> building = new ArrayList<Building>();
 		 Building buildingObj; 
 		 
-		 Connection con = null;  
+  
 	     Statement stmt = null;  
 	     ResultSet rs = null;
 	     try {
-	    	 	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
-	    	 	con = DriverManager.getConnection(connectionUrl);
-	    	 	//System.out.println("Database connection established");  	 
 	    	 	String SQL = "SELECT * FROM BUILDING WHERE hidden = 0";  
 	    	 	stmt = con.createStatement();  
 	    	 	rs = stmt.executeQuery(SQL);  
 
 
-    // Iterate through the data in the result set and display it.  
-    while (rs.next()) 
-    {  
-    	/*Columns of BUILDING TABLE
-       buildings.add(rs.getString(1)); -- buildingID
-       buildings.add(rs.getString(2)); -- campusID
-       buildings.add(rs.getString(3)); -- title
-       buildings.add(rs.getString(4)); -- buildingCode
-       buildings.add(rs.getString(5)); -- hidden
-       */
-    	
+			    // Iterate through the data in the result set and display it.  
+			    while (rs.next()) 
+			    {  
+			    	/*Columns of BUILDING TABLE
+			       buildings.add(rs.getString(1)); -- buildingID
+			       buildings.add(rs.getString(2)); -- campusID
+			       buildings.add(rs.getString(3)); -- title
+			       buildings.add(rs.getString(4)); -- buildingCode
+			       buildings.add(rs.getString(5)); -- hidden
+			       */
+			    	
+			       
+			       buildingObj = new Building(rs.getString(1),rs.getString(2), rs.getString(3),rs.getString(4),getBuildingClassrooms(rs.getString(1))); 
+			       building.add(buildingObj);
+			    }
        
-       buildingObj = new Building(rs.getString(1),rs.getString(2), rs.getString(3),rs.getString(4),getBuildingClassrooms(rs.getString(1))); 
-       building.add(buildingObj);
-    }
-       
-    con.close();  
+  
        
     } catch (Exception ex) 
 	       { 
@@ -536,37 +556,30 @@ public class Controller {
 	public static ArrayList<Classroom> getClassrooms(){
 		
 		 ArrayList<Classroom> classroom = new ArrayList<Classroom>();
-		 //Classroom classroomObj; 
-		 Connection con = null;  
 	     Statement stmt = null;  
 	     ResultSet rs = null;
 	     try {
-	    	 	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
-	    	 	con = DriverManager.getConnection(connectionUrl);
-	    	 	//System.out.println("Database connection established");  	 
 	    	 	String SQL = "SELECT * FROM CLASSROOM WHERE hidden = 0";  
 	    	 	stmt = con.createStatement();  
 	    	 	rs = stmt.executeQuery(SQL);  
 
 
-     // Iterate through the data in the result set and display it.  
-     while (rs.next()) 
-     {  
-    	 /*Columns in CLASROOM TABLE
-        classrooms.add(rs.getString(1)); -- classroomID
-        classrooms.add(rs.getString(2)); -- classroomNO
-        classrooms.add(rs.getString(3)); -- buildingID
-        classrooms.add(rs.getString(4)); -- capacity
-        classrooms.add(rs.getString(5)); --	NumOfComps
-        classrooms.add(rs.getString(6)); -- hidden
-        */
-     
-        //classroomObj = new Classroom(rs.getString(1),rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5)); 
-        classroom.add(new Classroom(rs.getString(1),rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5)));
-        
-     }
-        
-     con.close();  
+			     // Iterate through the data in the result set and display it.  
+			     while (rs.next()) 
+			     {  
+			    	 /*Columns in CLASROOM TABLE
+			        classrooms.add(rs.getString(1)); -- classroomID
+			        classrooms.add(rs.getString(2)); -- classroomNO
+			        classrooms.add(rs.getString(3)); -- buildingID
+			        classrooms.add(rs.getString(4)); -- capacity
+			        classrooms.add(rs.getString(5)); --	NumOfComps
+			        classrooms.add(rs.getString(6)); -- hidden
+			        */
+			     
+			        //classroomObj = new Classroom(rs.getString(1),rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5)); 
+			        classroom.add(new Classroom(rs.getString(1),rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5)));
+			        
+			     }
         
      } catch (Exception ex) 
 	       { 
@@ -584,34 +597,30 @@ public class Controller {
 	public static ArrayList<Schedule> getSchedules(){
 		 
 		 ArrayList<Schedule> schedule = new ArrayList<Schedule>();
-		 Schedule scheduleObj; 
-		 Connection con = null;  
+		 Schedule scheduleObj;   
 	     Statement stmt = null;  
 	     ResultSet rs = null;
 	     try {
-	    	 	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
-	    	 	con = DriverManager.getConnection(connectionUrl);
-	    	 	//System.out.println("Database connection established");  	 
 	    	 	String SQL = "SELECT * FROM SCHEDULE";  
 	    	 	stmt = con.createStatement();  
 	    	 	rs = stmt.executeQuery(SQL);  
 
 
-     // Iterate through the data in the result set and display it.  
-     while (rs.next()) 
-     {  
-    	/* Columns in SCHEDULE TABLE
-        schedules.add(rs.getString(1)); -- scheduleID
-        schedules.add(rs.getString(2)); -- semester
-        schedules.add(rs.getString(3)); -- yearID
-        */
-    	 
-        scheduleObj = new Schedule(rs.getString(1), rs.getString(2), rs.getString(3), getScheduleSections(rs.getString(1))); 
-        schedule.add(scheduleObj);
+			     // Iterate through the data in the result set and display it.  
+			     while (rs.next()) 
+			     {  
+			    	/* Columns in SCHEDULE TABLE
+			        schedules.add(rs.getString(1)); -- scheduleID
+			        schedules.add(rs.getString(2)); -- semester
+			        schedules.add(rs.getString(3)); -- yearID
+			        */
+			    	 
+			        scheduleObj = new Schedule(rs.getString(1), rs.getString(2), rs.getString(3), getScheduleSections(rs.getString(1))); 
+			        schedule.add(scheduleObj);
+			        
+			     }
         
-     }
-        
-     con.close();  
+  
         
      } catch (Exception ex) 
 	       { 
@@ -677,14 +686,32 @@ public static void writeLine(Writer w, List<String> values, char separators, cha
 
 }
 //********************************************************************************************//
+//private static LinkOption linkOption = null;
 //Method that prints schedule	
-	public static void PrintSchedules(int index)throws IOException{
+	public static void exportSchedule(int index, String userDirectory)throws IOException{
 			 
 			 ArrayList<Schedule> schedule = new ArrayList<Schedule>();
 			 schedule = getSchedules(); 
+			  
 			 //Schedule scheduleObj; 
-			 //String csvFile = "/Users/JamesPainter/Desktop/SectionScedule.csv";
-		     FileWriter writer = new FileWriter(csvFile);
+			 //String csvFile = "/Users/JamesPainter/Desktop/Spring2017.csv";
+			// String name = JOptionPane.showInputDialog(null, "Enter Name and Path to file where to save", "Enter PATH and Name of File", JOptionPane.PLAIN_MESSAGE);
+			 //String FilePath = JOptionPane.showInputDialog("Please Input filep path and file name including extension .csv (e.g. /Users/JamesPainter/Desktop/Spring 2017.csv)");
+			  
+//			 String FilePath = JOptionPane.showInputDialog(null, "Enter Folder Path to Name of File (e.g. /Users/JamesPainter/Desktop/Spring2017.csv)", "Save File", JOptionPane.PLAIN_MESSAGE);
+//			 File file = new File(FilePath); 
+//			
+//			 if(Files.notExists(path))
+//			 {
+//				 File file = new File(FilePath);
+//				 FilePath.concat(schedule.get(index).getSemester()+schedule.get(index).getYear()+".csv");
+//			     
+//				 
+//			 }
+			 String printFile = "/Users/"+userDirectory+"/Desktop/"+schedule.get(index).getSemester()+schedule.get(index).getYear()+".csv";
+			 //FileWriter writer = new FileWriter(csvFile);
+			 FileWriter writer = new FileWriter(printFile); 
+		     
 		     String Column1 = "BuildingCode";
 		     String Column2 = "Room Number"; 
 		     String Column3 = "Prof First Name";
@@ -744,39 +771,35 @@ public static void writeLine(Writer w, List<String> values, char separators, cha
 	public static ArrayList<Section> getSections(){
 		 ArrayList<Section> section = new ArrayList<Section>();
 		 Section sectionObj;
-		 Connection con = null;  
 	     Statement stmt = null;  
 	     ResultSet rs = null;
 	     try {
-	    	 	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
-	    	 	con = DriverManager.getConnection(connectionUrl);
-	    	 	//System.out.println("Database connection established");  	 
-	    	 	String SQL = "SELECT * FROM SECTION";  
+	    		String SQL = "SELECT * FROM SECTION";  
 	    	 	stmt = con.createStatement();  
 	    	 	rs = stmt.executeQuery(SQL);  
 
-    // Iterate through the data in the result set and display it.  
-    while (rs.next()) 
-    {
-       /*	Columns in SECTION TABLE	
-       sections.add(rs.getString(1)); -- sectionID
-       sections.add(rs.getString(2)); -- classroomID
-       sections.add(rs.getString(3)); -- professorID
-       sections.add(rs.getString(4)); -- courseID
-       sections.add(rs.getString(5)); -- scheduleID
-       sections.add(rs.getString(6)); -- startTime
-       sections.add(rs.getString(7)); -- endTime
-       sections.add(rs.getString(8)); -- startDate
-       sections.add(rs.getString(9)); -- endDate
-       sections.add(rs.getString(10));-- NumOfSeats
-       sections.add(rs.getString(11));-- DaysOfWeek
-       */
-       sectionObj = new Section(rs.getString(1),getSingleClassroom(rs.getString(2)),getSingleProfessor(rs.getString(3)), getSingleCourse(rs.getString(4)), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9),rs.getString(10), rs.getString(11)); 
-       section.add(sectionObj);
-       
-    }
-       
-    con.close();  
+			    // Iterate through the data in the result set and display it.  
+			    while (rs.next()) 
+			    {
+			       /*	Columns in SECTION TABLE	
+			       sections.add(rs.getString(1)); -- sectionID
+			       sections.add(rs.getString(2)); -- classroomID
+			       sections.add(rs.getString(3)); -- professorID
+			       sections.add(rs.getString(4)); -- courseID
+			       sections.add(rs.getString(5)); -- scheduleID
+			       sections.add(rs.getString(6)); -- startTime
+			       sections.add(rs.getString(7)); -- endTime
+			       sections.add(rs.getString(8)); -- startDate
+			       sections.add(rs.getString(9)); -- endDate
+			       sections.add(rs.getString(10));-- NumOfSeats
+			       sections.add(rs.getString(11));-- DaysOfWeek
+			       */
+			       sectionObj = new Section(rs.getString(1),getSingleClassroom(rs.getString(2)),getSingleProfessor(rs.getString(3)), getSingleCourse(rs.getString(4)), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9),rs.getString(10), rs.getString(11)); 
+			       section.add(sectionObj);
+			       
+			    }
+			       
+      
        
     } catch (Exception ex) 
 	       { 
@@ -793,8 +816,7 @@ public static void writeLine(Writer w, List<String> values, char separators, cha
 	
 	public static ArrayList<String> getProfessorSections(String professorID){
 		
-		 ArrayList<String> sections = new ArrayList<String>();
-		 Connection con = null;  
+		 ArrayList<String> sections = new ArrayList<String>();  
 	     Statement stmt = null;  
 	     ResultSet rs = null;
 	     try {
@@ -806,25 +828,24 @@ public static void writeLine(Writer w, List<String> values, char separators, cha
 	    	 	rs = stmt.executeQuery(SQL);  
 
 
-    // Iterate through the data in the result set and display it.  
-    while (rs.next()) 
-    {  
-    	sections.add(rs.getString(1)); // sectionID
-        sections.add(rs.getString(2)); // classroomID
-        sections.add(rs.getString(3)); // professorID
-        sections.add(rs.getString(4)); // courseID
-        sections.add(rs.getString(5)); // scheduleID
-        sections.add(rs.getString(6)); // startTime
-        sections.add(rs.getString(7)); // endTime
-        sections.add(rs.getString(8)); // startDate
-        sections.add(rs.getString(9)); // endDate
-        sections.add(rs.getString(10));// NumOfSeats
-        sections.add(rs.getString(11));// DaysOfWeek
+			    // Iterate through the data in the result set and display it.  
+			    while (rs.next()) 
+			    {  
+			    	sections.add(rs.getString(1)); // sectionID
+			        sections.add(rs.getString(2)); // classroomID
+			        sections.add(rs.getString(3)); // professorID
+			        sections.add(rs.getString(4)); // courseID
+			        sections.add(rs.getString(5)); // scheduleID
+			        sections.add(rs.getString(6)); // startTime
+			        sections.add(rs.getString(7)); // endTime
+			        sections.add(rs.getString(8)); // startDate
+			        sections.add(rs.getString(9)); // endDate
+			        sections.add(rs.getString(10));// NumOfSeats
+			        sections.add(rs.getString(11));// DaysOfWeek
+			       
+			    }
        
-       
-    }
-       
-    con.close();  
+   
        
     } catch (Exception ex) 
 	       { 
@@ -840,38 +861,32 @@ public static void writeLine(Writer w, List<String> values, char separators, cha
 	
 	public static ArrayList<String> getClassroomSections(String classroomID){
 		
-		 ArrayList<String> sections = new ArrayList<String>();
-		 Connection con = null;  
+		 ArrayList<String> sections = new ArrayList<String>();  
 	     Statement stmt = null;  
 	     ResultSet rs = null;
 	     try {
-	    	 	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
-	    	 	con = DriverManager.getConnection(connectionUrl);
-	    	 	//System.out.println("Database connection established");  	 
 	    	 	String SQL = "SELECT * FROM SECTION WHERE classroomID = " + classroomID;  
 	    	 	stmt = con.createStatement();  
 	    	 	rs = stmt.executeQuery(SQL);  
 
 
-   // Iterate through the data in the result set and display it.  
-   while (rs.next()) 
-   {  
-	   sections.add(rs.getString(1)); // sectionID
-       sections.add(rs.getString(2)); // classroomID
-       sections.add(rs.getString(3)); // professorID
-       sections.add(rs.getString(4)); // courseID
-       sections.add(rs.getString(5)); // scheduleID
-       sections.add(rs.getString(6)); // startTime
-       sections.add(rs.getString(7)); // endTime
-       sections.add(rs.getString(8)); // startDate
-       sections.add(rs.getString(9)); // endDate
-       sections.add(rs.getString(10));// NumOfSeats
-       sections.add(rs.getString(11));// DaysOfWeek
-      
-      
-   }
-      
-   con.close();  
+			   // Iterate through the data in the result set and display it.  
+			   while (rs.next()) 
+			   {  
+				   sections.add(rs.getString(1)); // sectionID
+			       sections.add(rs.getString(2)); // classroomID
+			       sections.add(rs.getString(3)); // professorID
+			       sections.add(rs.getString(4)); // courseID
+			       sections.add(rs.getString(5)); // scheduleID
+			       sections.add(rs.getString(6)); // startTime
+			       sections.add(rs.getString(7)); // endTime
+			       sections.add(rs.getString(8)); // startDate
+			       sections.add(rs.getString(9)); // endDate
+			       sections.add(rs.getString(10));// NumOfSeats
+			       sections.add(rs.getString(11));// DaysOfWeek
+			      
+			   }
+        
       
    } catch (Exception ex) 
 	       { 
@@ -887,29 +902,23 @@ public static void writeLine(Writer w, List<String> values, char separators, cha
 	
 	public static ArrayList<String> getSectionsTimeProfessorID(String professorID){
 		
-		 ArrayList<String> sections = new ArrayList<String>();
-		 Connection con = null;  
+		 ArrayList<String> sections = new ArrayList<String>();  
 	     Statement stmt = null;  
 	     ResultSet rs = null;
 	     try {
-	    	 	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
-	    	 	con = DriverManager.getConnection(connectionUrl);
-	    	 	//System.out.println("Database connection established");  	 
 	    	 	String SQL = "SELECT startTime, endTime FROM SECTION WHERE professorID = " + professorID;  
 	    	 	stmt = con.createStatement();  
 	    	 	rs = stmt.executeQuery(SQL);  
 
 
-  // Iterate through the data in the result set and display it.  
-  while (rs.next()) 
-  {  
-     sections.add(rs.getString(1)); //startTime
-     sections.add(rs.getString(2)); //endTime
-    
-     
-  }
-     
-  con.close();  
+				  // Iterate through the data in the result set and display it.  
+				  while (rs.next()) 
+				  {  
+				     sections.add(rs.getString(1)); //startTime
+				     sections.add(rs.getString(2)); //endTime
+				    
+				     
+				  }
      
   } catch (Exception ex) 
 	{ 
@@ -926,38 +935,31 @@ public static void writeLine(Writer w, List<String> values, char separators, cha
 	//
 	public static ArrayList<String> getSectionsTimeClassroomID(String classroomID){
 		
-		 ArrayList<String> sections = new ArrayList<String>();
-		 Connection con = null;  
+		 ArrayList<String> sections = new ArrayList<String>();  
 	     Statement stmt = null;  
 	     ResultSet rs = null;
 	     try {
-	    	 	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
-	    	 	con = DriverManager.getConnection(connectionUrl);
-	    	 	//System.out.println("Database connection established");  	 
 	    	 	String SQL = "SELECT startTime, endTime FROM SECTION WHERE classroomID = " + classroomID ;  
 	    	 	stmt = con.createStatement();  
 	    	 	rs = stmt.executeQuery(SQL);  
 
 
- // Iterate through the data in the result set and display it.  
- while (rs.next()) 
- {  
-    sections.add(rs.getString(1)); //startTime
-    sections.add(rs.getString(2)); //endTime
-   
-    
- }
-    
- con.close();  
-    
- } catch (Exception ex) 
-	{ 
-	            // handle the error
-	        	 	System.err.println("Cannot connect to database server");
-	        	  	System.out.println("SQLException: " + ex.getMessage());
-	        	  	ex.printStackTrace(); 
-	        
-	 }
+				 // Iterate through the data in the result set and display it.  
+				 while (rs.next()) 
+				 {  
+				    sections.add(rs.getString(1)); //startTime
+				    sections.add(rs.getString(2)); //endTime
+				   
+				    
+				 }
+		 } catch (Exception ex) 
+			{ 
+			            // handle the error
+			        	 	System.err.println("Cannot connect to database server");
+			        	  	System.out.println("SQLException: " + ex.getMessage());
+			        	  	ex.printStackTrace(); 
+			        
+			 }
 		
 		return sections; 
 	}
@@ -966,20 +968,12 @@ public static void writeLine(Writer w, List<String> values, char separators, cha
 	public static void insertProfessor(String firstName, String lastName, String status, String requiredHours, String releaseHours)
 	{
 		 
-		 Connection con = null;  
+  
 	     
 	     try {
-	    	 
-	    	 
-	    	 	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
-	    	 	con = DriverManager.getConnection(connectionUrl);
-	    	 	//System.out.println("Database connection established");  	 
 	    	 	String SQL = "INSERT PROFESSOR VALUES ("+"'"+firstName+"'" +","+"'"+ lastName+"'"+","+"'"+status+"'"+","+requiredHours+","+releaseHours+","+"0"+")";
 	    	 	PreparedStatement ps = con.prepareStatement(SQL);
 	    	 	ps.executeUpdate();
-	    	 	
-  
-	    	 	con.close();  
             
          } catch (Exception ex) 
 	       { 
@@ -994,23 +988,15 @@ public static void writeLine(Writer w, List<String> values, char separators, cha
 	}
 	
 	public static void updateProfessor(String professorID, String updateColumn, String UPDATE)
-	{
-		 
-		 Connection con = null;  
+	{  
 	     
 	     try {
 	    	 
 	    	 
-	    	 	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
-	    	 	con = DriverManager.getConnection(connectionUrl);
-	    	 	//System.out.println("Database connection established");  	 
 	    	 	String SQL = "UPDATE PROFESSOR SET "+ updateColumn +" = "+ UPDATE + "WHERE professorID = " + professorID;
 	    	 	PreparedStatement ps = con.prepareStatement(SQL);
 	    	 	ps.executeUpdate();
-	    	 	
-  
-	    	 	con.close();  
-            
+	       
          } catch (Exception ex) 
 	       { 
 	            // handle the error
@@ -1025,21 +1011,12 @@ public static void writeLine(Writer w, List<String> values, char separators, cha
 	
 	public static void deleteProfessor(String professorID)
 	{
-		
-		 Connection con = null;  
 	     
 	     try {
-	    	 
-	    	 
-	    	 	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
-	    	 	con = DriverManager.getConnection(connectionUrl);
-	    	 	//System.out.println("Database connection established");  	 
 	    	 	String SQL = "UPDATE PROFESSOR SET hidden = 1 WHERE professorID = " + professorID;
 	    	 	PreparedStatement ps = con.prepareStatement(SQL);
 	    	 	ps.executeUpdate();
-	    	 	
-  
-	    	 	con.close();  
+	  
             
          } catch (Exception ex) 
 	       { 
@@ -1056,23 +1033,14 @@ public static void writeLine(Writer w, List<String> values, char separators, cha
 // ---------------------------------------------------------INSERT, MODIFY, DELETE COURSE ---------------------------------------
 	
 	public static void insertCourse(String title, String creditHours, String prefix, String courseNo, String description)
-	{
-		 
-		 Connection con = null;  
+	{  
 	     
 	     try {
 	    	 
-	    	 
-	    	 	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
-	    	 	con = DriverManager.getConnection(connectionUrl);
-	    	 	//System.out.println("Database connection established");  	 
 	    	 	String SQL = "INSERT COURSE VALUES ("+"'"+title+"'" +","+creditHours+","+"'"+prefix+"'"+","+courseNo+","+"'"+description+"'"+","+"0"+")";
 	    	 	PreparedStatement ps = con.prepareStatement(SQL);
 	    	 	ps.executeUpdate();
-	    	 	
-  
-	    	 	con.close();  
-            
+	    	        
          } catch (Exception ex) 
 	       { 
 	            // handle the error
@@ -1086,22 +1054,13 @@ public static void writeLine(Writer w, List<String> values, char separators, cha
 	}
 	
 	public static void updateCourse(String courseID, String updateColumn, String UPDATE)
-	{
-		 
-		 Connection con = null;  
+	{  
 	     
 	     try {
-	    	 
-	    	 
-	    	 	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
-	    	 	con = DriverManager.getConnection(connectionUrl);
-	    	 	//System.out.println("Database connection established");  	 
 	    	 	String SQL = "UPDATE COURSE SET "+ updateColumn +" = "+ UPDATE + "WHERE courseID = " + courseID;
 	    	 	PreparedStatement ps = con.prepareStatement(SQL);
 	    	 	ps.executeUpdate();
-	    	 	
-  
-	    	 	con.close();  
+	  
             
          } catch (Exception ex) 
 	       { 
@@ -1116,22 +1075,12 @@ public static void writeLine(Writer w, List<String> values, char separators, cha
 	}
 	
 	public static void deleteCourse(String courseID)
-	{
-		
-		 Connection con = null;  
+	{  
 	     
 	     try {
-	    	 
-	    	 
-	    	 	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
-	    	 	con = DriverManager.getConnection(connectionUrl);
-	    	 	//System.out.println("Database connection established");  	 
 	    	 	String SQL = "UPDATE COURSE SET hidden = 1 WHERE courseID = " + courseID;
 	    	 	PreparedStatement ps = con.prepareStatement(SQL);
-	    	 	ps.executeUpdate();
-	    	 	
-  
-	    	 	con.close();  
+	    	 	ps.executeUpdate();  
             
          } catch (Exception ex) 
 	       { 
@@ -1149,21 +1098,11 @@ public static void writeLine(Writer w, List<String> values, char separators, cha
 	
 		public static void insertCampus(String title, String address)
 		{
-			 
-			 Connection con = null;  
-		     
-		     try {
+			 try {
 		    	 
-		    	 
-		    	 	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
-		    	 	con = DriverManager.getConnection(connectionUrl);
-		    	 	//System.out.println("Database connection established");  	 
 		    	 	String SQL = "INSERT CAMPUS VALUES ("+"'"+title+"'" +","+"'"+address+"'"+","+"0"+")";
 		    	 	PreparedStatement ps = con.prepareStatement(SQL);
-		    	 	ps.executeUpdate();
-		    	 	
-	  
-		    	 	con.close();  
+		    	 	ps.executeUpdate();  
 	            
 	         } catch (Exception ex) 
 		       { 
@@ -1179,21 +1118,12 @@ public static void writeLine(Writer w, List<String> values, char separators, cha
 		
 		public static void updateCampus(String campusID, String updateColumn, String UPDATE)
 		{
-			 
-			 Connection con = null;  
 		     
 		     try {
-		    	 
-		    	 
-		    	 	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
-		    	 	con = DriverManager.getConnection(connectionUrl);
-		    	 	//System.out.println("Database connection established");  	 
 		    	 	String SQL = "UPDATE CAMPUS SET "+ updateColumn +" = "+ UPDATE + "WHERE campusID = " + campusID;
 		    	 	PreparedStatement ps = con.prepareStatement(SQL);
 		    	 	ps.executeUpdate();
-		    	 	
 	  
-		    	 	con.close();  
 	            
 	         } catch (Exception ex) 
 		       { 
@@ -1208,22 +1138,12 @@ public static void writeLine(Writer w, List<String> values, char separators, cha
 		}
 		
 		public static void deleteCampus(String campusID)
-		{
-			
-			 Connection con = null;  
+		{  
 		     
 		     try {
-		    	 
-		    	 
-		    	 	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
-		    	 	con = DriverManager.getConnection(connectionUrl);
-		    	 	//System.out.println("Database connection established");  	 
 		    	 	String SQL = "UPDATE CAMPUS SET hidden = 1 WHERE campusID = " + campusID;
 		    	 	PreparedStatement ps = con.prepareStatement(SQL);
-		    	 	ps.executeUpdate();
-		    	 	
-	  
-		    	 	con.close();  
+		    	 	ps.executeUpdate();  
 	            
 	         } catch (Exception ex) 
 		       { 
@@ -1240,22 +1160,14 @@ public static void writeLine(Writer w, List<String> values, char separators, cha
 // ---------------------------------------------------------INSERT, MODIFY, DELETE BUILDING ---------------------------------------
 		
 			public static void insertBuilding(String campusID, String title, String buildingCode)
-			{
-				 
-				 Connection con = null;  
+			{  
 			     
 			     try {
 			    	 
-			    	 
-			    	 	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
-			    	 	con = DriverManager.getConnection(connectionUrl);
-			    	 	//System.out.println("Database connection established");  	 
 			    	 	String SQL = "INSERT BUILDING VALUES ("+campusID+","+"'"+title+"'" +","+"'"+buildingCode+"'"+","+"0"+")";
 			    	 	PreparedStatement ps = con.prepareStatement(SQL);
 			    	 	ps.executeUpdate();
-			    	 	
 		  
-			    	 	con.close();  
 		            
 		         } catch (Exception ex) 
 			       { 
@@ -1270,22 +1182,14 @@ public static void writeLine(Writer w, List<String> values, char separators, cha
 			}
 			
 			public static void updateBuilding(String buildingID, String updateColumn, String UPDATE)
-			{
-				 
-				 Connection con = null;  
+			{  
 			     
 			     try {
 			    	 
 			    	 
-			    	 	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
-			    	 	con = DriverManager.getConnection(connectionUrl);
-			    	 	//System.out.println("Database connection established");  	 
 			    	 	String SQL = "UPDATE BUILDING SET "+ updateColumn +" = "+ UPDATE + "WHERE buildingID = " + buildingID;
 			    	 	PreparedStatement ps = con.prepareStatement(SQL);
 			    	 	ps.executeUpdate();
-			    	 	
-		  
-			    	 	con.close();  
 		            
 		         } catch (Exception ex) 
 			       { 
@@ -1300,22 +1204,13 @@ public static void writeLine(Writer w, List<String> values, char separators, cha
 			}
 			
 			public static void deleteBuilding(String buildingID)
-			{
-				
-				 Connection con = null;  
+			{  
 			     
 			     try {
-			    	 
-			    	 
-			    	 	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
-			    	 	con = DriverManager.getConnection(connectionUrl);
-			    	 	//System.out.println("Database connection established");  	 
 			    	 	String SQL = "UPDATE BUILDING SET hidden = 1 WHERE buildingID = " + buildingID;
 			    	 	PreparedStatement ps = con.prepareStatement(SQL);
 			    	 	ps.executeUpdate();
-			    	 	
 		  
-			    	 	con.close();  
 		            
 		         } catch (Exception ex) 
 			       { 
@@ -1332,23 +1227,13 @@ public static void writeLine(Writer w, List<String> values, char separators, cha
 // ---------------------------------------------------------INSERT, MODIFY, DELETE CLASSROOM ---------------------------------------
 			
 				public static void insertClassroom(String classroomID, String classroomNo, String buildingID, String capacity,String numOfComps)
-				{
-					 
-					 Connection con = null;  
+				{  
 				     
 				     try {
-				    	 
-				    	 
-				    	 	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
-				    	 	con = DriverManager.getConnection(connectionUrl);
-				    	 	//System.out.println("Database connection established");  	 
 				    	 	String SQL = "INSERT CLASSROOM VALUES ("+classroomID+","+classroomNo+","+buildingID+","+","+capacity+","+","+numOfComps+","+"0"+")";
 				    	 	PreparedStatement ps = con.prepareStatement(SQL);
 				    	 	ps.executeUpdate();
-				    	 	
-			  
-				    	 	con.close();  
-			            
+				         
 			         } catch (Exception ex) 
 				       { 
 				            // handle the error
@@ -1362,22 +1247,14 @@ public static void writeLine(Writer w, List<String> values, char separators, cha
 				}
 				
 				public static void updateClassroom(String classroomID, String updateColumn, String UPDATE)
-				{
-					 
-					 Connection con = null;  
+				{  
 				     
 				     try {
 				    	 
-				    	 
-				    	 	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
-				    	 	con = DriverManager.getConnection(connectionUrl);
-				    	 	//System.out.println("Database connection established");  	 
 				    	 	String SQL = "UPDATE CLASSROOM SET "+ updateColumn +" = "+ UPDATE + "WHERE classroomID = " + classroomID;
 				    	 	PreparedStatement ps = con.prepareStatement(SQL);
 				    	 	ps.executeUpdate();
 				    	 	
-			  
-				    	 	con.close();  
 			            
 			         } catch (Exception ex) 
 				       { 
@@ -1392,23 +1269,14 @@ public static void writeLine(Writer w, List<String> values, char separators, cha
 				}
 				
 				public static void deleteClassroom(String classroomID)
-				{
-					
-					 Connection con = null;  
+				{  
 				     
 				     try {
 				    	 
-				    	 
-				    	 	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
-				    	 	con = DriverManager.getConnection(connectionUrl);
-				    	 	//System.out.println("Database connection established");  	 
 				    	 	String SQL = "UPDATE CLASSROOM SET hidden = 1 WHERE classroomID = " + classroomID;
 				    	 	PreparedStatement ps = con.prepareStatement(SQL);
 				    	 	ps.executeUpdate();
-				    	 	
-			  
-				    	 	con.close();  
-			            
+				           
 			         } catch (Exception ex) 
 				       { 
 				            // handle the error
@@ -1427,21 +1295,12 @@ public static void writeLine(Writer w, List<String> values, char separators, cha
 				public static void insertSchedule(String scheduleID, String semester, String yearID)
 				{
 					 
-					 Connection con = null;  
-				     
 				     try {
 				    	 
-				    	 
-				    	 	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
-				    	 	con = DriverManager.getConnection(connectionUrl);
-				    	 	//System.out.println("Database connection established");  	 
 				    	 	String SQL = "INSERT SCHEDULE VALUES ("+scheduleID+","+"'"+semester+"'"+","+yearID+")";
 				    	 	PreparedStatement ps = con.prepareStatement(SQL);
 				    	 	ps.executeUpdate();
-				    	 	
-			  
-				    	 	con.close();  
-			            
+				        
 			         } catch (Exception ex) 
 				       { 
 				            // handle the error
@@ -1456,21 +1315,11 @@ public static void writeLine(Writer w, List<String> values, char separators, cha
 				
 				public static void updateSchedule(String scheduleID, String updateColumn, String UPDATE)
 				{
-					 
-					 Connection con = null;  
-				     
 				     try {
-				    	 
-				    	 
-				    	 	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
-				    	 	con = DriverManager.getConnection(connectionUrl);
-				    	 	//System.out.println("Database connection established");  	 
 				    	 	String SQL = "UPDATE SCHEDULE SET "+ updateColumn +" = "+ UPDATE + "WHERE scheduleID = " + scheduleID;
 				    	 	PreparedStatement ps = con.prepareStatement(SQL);
 				    	 	ps.executeUpdate();
-				    	 	
-			  
-				    	 	con.close();  
+				  
 			            
 			         } catch (Exception ex) 
 				       { 
@@ -1485,22 +1334,14 @@ public static void writeLine(Writer w, List<String> values, char separators, cha
 				}
 				
 				public static void deleteSchedule(String scheduleID)
-				{
-					
-					 Connection con = null;  
+				{ 
 				     
 				     try {
 				    	 
-				    	 
-				    	 	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
-				    	 	con = DriverManager.getConnection(connectionUrl);
-				    	 	//System.out.println("Database connection established");  	 
 				    	 	String SQL = "DELETE SCHEDULE WHERE scheduleID = " + scheduleID;
 				    	 	PreparedStatement ps = con.prepareStatement(SQL);
 				    	 	ps.executeUpdate();
-				    	 	
-			  
-				    	 	con.close();  
+		  
 			            
 			         } catch (Exception ex) 
 				       { 
@@ -1518,22 +1359,12 @@ public static void writeLine(Writer w, List<String> values, char separators, cha
 				
 				public static void insertSection(String sectionID, String classroomID, String professorID, String courseID, String scheduleID, String startTime, String endTime, String startDate, String endDate,  String numOfSeats, String daysOfWeek)
 				{
-					 
-					 Connection con = null;  
 				     
 				     try {
-				    	 
-				    	 
-				    	 	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
-				    	 	con = DriverManager.getConnection(connectionUrl);
-				    	 	//System.out.println("Database connection established");  	 
 				    	 	String SQL = "INSERT SECTION VALUES ("+sectionID+","+","+classroomID+","+professorID+","+courseID+","+scheduleID+","+"'"+startTime+"'"+","+"'"+endTime+"'"+","+"'"+startDate+"'"+","+"'"+endDate+"'"+","+numOfSeats+","+daysOfWeek+")";
 				    	 	PreparedStatement ps = con.prepareStatement(SQL);
 				    	 	ps.executeUpdate();
-				    	 	
-			  
-				    	 	con.close();  
-			            
+				         
 			         } catch (Exception ex) 
 				       { 
 				            // handle the error
@@ -1548,21 +1379,12 @@ public static void writeLine(Writer w, List<String> values, char separators, cha
 				
 				public static void updateSection(String sectionID, String updateColumn, String UPDATE)
 				{
-					 
-					 Connection con = null;  
 				     
 				     try {
-				    	 
-				    	 
-				    	 	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
-				    	 	con = DriverManager.getConnection(connectionUrl);
-				    	 	//System.out.println("Database connection established");  	 
 				    	 	String SQL = "UPDATE SECTION SET "+ updateColumn +" = "+ UPDATE + "WHERE sectionID = " + sectionID;
 				    	 	PreparedStatement ps = con.prepareStatement(SQL);
 				    	 	ps.executeUpdate();
 				    	 	
-			  
-				    	 	con.close();  
 			            
 			         } catch (Exception ex) 
 				       { 
@@ -1577,23 +1399,13 @@ public static void writeLine(Writer w, List<String> values, char separators, cha
 				}
 				
 				public static void deleteSection(String sectionID)
-				{
-					
-					 Connection con = null;  
+				{	  
 				     
 				     try {
-				    	 
-				    	 
-				    	 	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");  
-				    	 	con = DriverManager.getConnection(connectionUrl);
-				    	 	//System.out.println("Database connection established");  	 
 				    	 	String SQL = "DELETE SECTION WHERE sectionID = " + sectionID;
 				    	 	PreparedStatement ps = con.prepareStatement(SQL);
 				    	 	ps.executeUpdate();
 				    	 	
-			  
-				    	 	con.close();  
-			            
 			         } catch (Exception ex) 
 				       { 
 				            // handle the error
@@ -1609,7 +1421,9 @@ public static void writeLine(Writer w, List<String> values, char separators, cha
 //Main	
 	public static void main(String[] args) {	 
 // updateProfessor Table in status column for professorID 1 
-		 updateProfessor("1", "Status", "'Ten'"); 
+		openConnection(); 
+		
+		updateProfessor("1", "Status", "'Ten'"); 
 
 		 //get all rows in the professor table and print it 
 		 ArrayList<Professor> testProf = new ArrayList<Professor>();
@@ -1842,13 +1656,12 @@ public static void writeLine(Writer w, List<String> values, char separators, cha
 		 
 //******************Test Printing the Schedule**************************/ 
 		 try {
-			 PrintSchedules(15);
+			 exportSchedule(15,"JamesPainter");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		 
 		
-		
+		closeConnection(); 
 	}
 
 }
