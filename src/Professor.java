@@ -1,67 +1,81 @@
 
-public class Professor {
-	private int primaryKey; 
+public class Professor extends DatabaseObject
+{
+	
 	private String firstName; 
 	private String lastName;
-	private int fillerHours;
-	private int creditHours; 
+	private String releaseHours;
+	private String creditHours; 
+	private String status;
 	
-	public Professor(int primaryKey ,String firstName, String lastName)
+	public Professor(String primaryKey, String firstName, String lastName, String status, String creditHours, String releaseHours)
 	{
-		this.primaryKey = primaryKey; 
+		super(primaryKey); 
+		
 		this.firstName = firstName;
 		this.lastName = lastName; 
+		this.status = status;
+		this.releaseHours = releaseHours; 
+		this.creditHours = creditHours; 
 	}
 	
-	public void ChangeCreditHours(int numberOfCreditHours)
+	public void changeStatus(String status) 
 	{
-		this.creditHours = numberOfCreditHours; 
+		this.status = status;
 	}
 	
-	public int GetCreditHours()
+	public String getStatus() 
 	{
-		return creditHours; 
+		return status;
 	}
 	
-	public void ChangeFirstName(String firstName)
+	public void changeCreditHours(int numberOfCreditHours)
+	{
+		this.creditHours = String.valueOf(numberOfCreditHours); 
+	}
+	
+	public int getCreditHours()
+	{
+		return Integer.valueOf(creditHours); 
+	}
+	
+	public void changeFirstName(String firstName)
 	{
 		this.firstName = firstName; 
 	}
 	
-	public String GetFirstName()
+	public String getFirstName()
 	{
 		return firstName;
 	}
 	
-	public void ChangeLastName(String lastName)
+	public void changeLastName(String lastName)
 	{
 		this.lastName = lastName; 
 	}
 	
-	public String GetLastName()
+	public String getLastName()
 	{
 		return lastName; 
 	}
 	
-	public void ChangeFillerHours(int numberOfFillerHours)
+	public void changeReleaseHours(int numberOfReleaseHours)
 	{
-		this.fillerHours = numberOfFillerHours; 
+		this.releaseHours = String.valueOf(numberOfReleaseHours); 
 	}
 	
-	public int GetFillerHours()
+	public int getReleaseHours()
 	{
-		return fillerHours; 
+		return Integer.valueOf(releaseHours); 
 	}
 	
-	public int GetPrimaryKey()
+	
+	public String toString()
 	{
-		return primaryKey; 
+//		return firstName + " " + lastName + " " + Integer.toString(creditHours) + " " + Integer.toString(releaseHours)
+//		 + " " + super.getPrimaryKey(); 
+//		return firstName + " " + lastName;
+		return lastName + ", " + firstName;
 	}
 	
-	public String ToString()
-	{
-		return firstName + " " + lastName + " " + Integer.toString(creditHours) + " " + Integer.toString(fillerHours)
-		 + " " + Integer.toString(primaryKey); 
-	}
-
 }

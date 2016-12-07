@@ -1,69 +1,74 @@
-
-public class Course {
-	private int primaryKey; 
-	private String courseTag;
-	private int courseNumber;
-	private String courseName;
-	private String courseDescription;
+public class Course extends DatabaseObject{
 	
-	public Course(String courseTag, int courseNumber, String courseName, int primaryKey)
+	private String prefix;
+	private String courseNumber;
+	private String title;
+	private String description;
+	private String creditHours;
+	
+	public Course(String primaryKey, String title, String creditHours, String prefix, String courseNumber, String description)
 	{
-		this.courseTag = courseTag;
+		super(primaryKey); 
+		this.prefix = prefix;
 		this.courseNumber = courseNumber;
-		this.courseName = courseName; 
-		this.primaryKey = primaryKey; 
+		this.title = title; 
+		this.description = description; 
+		this.creditHours = creditHours;
 	}
 	
-	public void ChangeCourseNumber(int courseNumber)
+	public void setCreditHours(String creditHours) 
+	{
+		this.creditHours = creditHours;
+	}
+	
+	public String getCreditHours() 
+	{
+		return this.creditHours;
+	}
+	
+	public void changeCourseNumber(String courseNumber)
 	{
 		this.courseNumber = courseNumber;
 	}
 	
-	public int GetCourseNumber()
+	public String getCourseNumber()
 	{
 		return this.courseNumber;
 	}
 	
-	public void ChangeCourseName(String courseName)
+	public void changeTitle(String title)
 	{
-		this.courseName = courseName; 
+		this.title = title; 
 	}
 	
-	public String GetCourseName()
+	public String getTitle()
 	{
-		return this.courseName; 
+		return this.title; 
 	}
 	
-	public void ChangeCourseTag(String courseTag)
+	public void changePrefix(String prefix)
 	{
-		this.courseTag = courseTag; 
+		this.prefix = prefix; 
 	}
 	
-	public String GetCourseTag()
+	public String getPrefix()
 	{
-		return courseTag; 
+		return prefix; 
 	}
 	
-	public void ChangeCourseDescription(String courseDiscription)
+	public void changeDescription(String courseDiscription)
 	{
-		this.courseDescription = courseDiscription; 
+		this.description = courseDiscription; 
 	}
 	
-	public String GetCourseDescription()
+	public String getDescription()
 	{
-		return this.courseDescription;  
+		return this.description;  
 	}
 	
-	public int GetPrimaryKey()
+	public String toString()
 	{
-		return primaryKey; 
+		return prefix + " " + courseNumber + " " + title; 
 	}
-	
-	public String ToString()
-	{
-		return courseTag + " " + Integer.toString(courseNumber) + " " + courseName + " " + courseDescription; 
-	}
-	
-	
 
 }

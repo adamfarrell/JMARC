@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Accordion?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUIController">
+   <top>
+      <MenuBar BorderPane.alignment="CENTER">
+        <menus>
+          <Menu mnemonicParsing="false" text="Assets">
+            <items>
+                  <Menu mnemonicParsing="false" text="New">
+                    <items>
+                      <MenuItem fx:id="newBuilding" mnemonicParsing="false" onAction="#addNewBuilding" text="Building" />
+                        <MenuItem fx:id="newCampus" mnemonicParsing="false" onAction="#addNewCampus" text="Campus" />
+                        <MenuItem fx:id="newClassroom" mnemonicParsing="false" onAction="#addNewClassroom" text="Classroom" />
+                        <MenuItem fx:id="newCourse" mnemonicParsing="false" onAction="#addNewCourse" text="Course" />
+                        <MenuItem fx:id="newProfessor" mnemonicParsing="false" onAction="#addNewProfessor" text="Professor" />
+                    </items>
+                  </Menu>
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Help">
+            <items>
+              <MenuItem mnemonicParsing="false" text="About" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+   </top>
+   <center>
+      <SplitPane dividerPositions="0.33444816053511706" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <items>
+            <Accordion maxWidth="300.0">
+              <panes>
+                <TitledPane text="Assets">
+                     <content>
+                        <Accordion>
+                          <panes>
+                            <TitledPane contentDisplay="RIGHT" maxWidth="1.7976931348623157E308" text="Buildings">
+                                 <content>
+                                    <VBox>
+                                       <children>
+                                          <HBox>
+                                             <children>
+                                                <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#addNewBuilding" text="Add Building" HBox.hgrow="ALWAYS" />
+                                             </children>
+                                          </HBox>
+                                          <ListView fx:id="buildingList" maxHeight="1.7976931348623157E308" onMouseClicked="#editBuilding" VBox.vgrow="ALWAYS" />
+                                       </children>
+                                       <padding>
+                                          <Insets top="1.0" />
+                                       </padding>
+                                    </VBox>
+                                 </content>
+                            </TitledPane>
+                            <TitledPane contentDisplay="RIGHT" text="Campuses">
+                                 <content>
+                                    <VBox>
+                                       <children>
+                                          <HBox>
+                                             <children>
+                                                <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#addNewCampus" text="Add Campus" HBox.hgrow="ALWAYS" />
+                                             </children>
+                                          </HBox>
+                                          <ListView fx:id="campusList" maxHeight="1.7976931348623157E308" onMouseClicked="#editCampus" VBox.vgrow="ALWAYS" />
+                                       </children>
+                                       <padding>
+                                          <Insets top="1.0" />
+                                       </padding>
+                                    </VBox>
+                                 </content>
+                            </TitledPane>
+                            <TitledPane text="Classrooms">
+                                 <content>
+                                    <VBox>
+                                       <children>
+                                          <HBox>
+                                             <children>
+                                                <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#addNewClassroom" text="Add Classroom" HBox.hgrow="ALWAYS" />
+                                             </children>
+                                          </HBox>
+                                          <ListView fx:id="classroomList" maxHeight="1.7976931348623157E308" onMouseClicked="#editClassroom" VBox.vgrow="ALWAYS" />
+                                       </children>
+                                       <padding>
+                                          <Insets top="1.0" />
+                                       </padding>
+                                    </VBox>
+                                 </content>
+                            </TitledPane>
+                              <TitledPane layoutX="10.0" layoutY="10.0" prefWidth="200.0" text="Courses">
+                                 <content>
+                                    <VBox>
+                                       <children>
+                                          <HBox>
+                                             <children>
+                                                <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#addNewCourse" text="Add Course" HBox.hgrow="ALWAYS" />
+                                             </children>
+                                          </HBox>
+                                          <ListView fx:id="courseList" maxHeight="1.7976931348623157E308" onMouseClicked="#editCourse" VBox.vgrow="ALWAYS" />
+                                       </children>
+                                       <padding>
+                                          <Insets top="1.0" />
+                                       </padding>
+                                    </VBox>
+                                 </content>
+                              </TitledPane>
+                              <TitledPane layoutX="10.0" layoutY="358.0" text="Professors">
+                                 <content>
+                                    <VBox>
+                                       <children>
+                                          <HBox>
+                                             <children>
+                                                <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#addNewProfessor" text="Add Professor" HBox.hgrow="ALWAYS" />
+                                             </children>
+                                          </HBox>
+                                          <ListView fx:id="professorList" maxHeight="1.7976931348623157E308" onMouseClicked="#editProfessor" VBox.vgrow="ALWAYS" />
+                                       </children>
+                                       <padding>
+                                          <Insets top="1.0" />
+                                       </padding>
+                                    </VBox>
+                                 </content>
+                              </TitledPane>
+                          </panes>
+                        </Accordion>
+                     </content>
+                  </TitledPane>
+              </panes>
+            </Accordion>
+            <VBox>
+               <children>
+                  <HBox>
+                     <children>
+                        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#addNewSchedule" text="Create Schedule" HBox.hgrow="ALWAYS" />
+                     </children>
+                  </HBox>
+                  <ListView fx:id="scheduleList" onMouseClicked="#editSchedule" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+               </children>
+            </VBox>
+         </items>
+      </SplitPane>
+   </center>
+</BorderPane>
