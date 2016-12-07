@@ -195,6 +195,98 @@ private static Connection con;
 	}
 	
 	//Method that returns a Building object by the buildingID	
+		private static Schedule getSingleSchedule(String pk)
+		{
+			  
+			 Schedule scheduleObj = null; 
+			 ArrayList<Section> sections = new ArrayList<Section>(); 
+			  
+			 
+			// Connection con = null;  
+		     Statement stmt = null;  
+		     ResultSet rs = null;
+		     try {
+		    	  	 
+		    	 	String SQL = "SELECT * FROM SCHEDULE WHERE scheduleID = " + pk;  
+		    	 	stmt = con.createStatement();  
+		    	 	rs = stmt.executeQuery(SQL);  
+	 
+	 
+			        // Iterate through the data in the result set and display it.  
+			        while (rs.next()) 
+			        {  
+			        	/* Columns in SCHEDULE TABLE
+				        schedules.add(rs.getString(1)); -- scheduleID
+				        schedules.add(rs.getString(2)); -- semester
+				        schedules.add(rs.getString(3)); -- yearID
+				        */
+			        	
+			        	sections = getSingleSection(rs.getString(1));
+			            scheduleObj = new Schedule(rs.getString(1),rs.getString(2), rs.getString(3),sections);
+			        }
+	           
+//	         
+	           
+	        } catch (Exception ex) 
+		       { 
+		            // handle the error
+		        	 	System.err.println("Cannot connect to database server");
+		        	  	System.out.println("SQLException: " + ex.getMessage());
+		        	  	ex.printStackTrace(); 
+		        
+		        }
+			
+			return scheduleObj; 
+			
+		}
+		
+		public static ArrayList<Section> getSingleSection(String scheduleID){
+			 ArrayList<Section> section = new ArrayList<Section>();
+			 Section sectionObj;
+		     Statement stmt = null;  
+		     ResultSet rs = null;
+		     try {
+		    		String SQL = "SELECT * FROM SECTION WHERE scheduleID ="+scheduleID;  
+		    	 	stmt = con.createStatement();  
+		    	 	rs = stmt.executeQuery(SQL);  
+
+				    // Iterate through the data in the result set and display it.  
+				    while (rs.next()) 
+				    {
+				       /*	Columns in SECTION TABLE	
+				       sections.add(rs.getString(1)); -- sectionID
+				       sections.add(rs.getString(2)); -- classroomID
+				       sections.add(rs.getString(3)); -- professorID
+				       sections.add(rs.getString(4)); -- courseID
+				       sections.add(rs.getString(5)); -- scheduleID
+				       sections.add(rs.getString(6)); -- startTime
+				       sections.add(rs.getString(7)); -- endTime
+				       sections.add(rs.getString(8)); -- startDate
+				       sections.add(rs.getString(9)); -- endDate
+				       sections.add(rs.getString(10));-- NumOfSeats
+				       sections.add(rs.getString(11));-- DaysOfWeek
+				       */
+				       sectionObj = new Section(rs.getString(1),getSingleClassroom(rs.getString(2)),getSingleProfessor(rs.getString(3)), getSingleCourse(rs.getString(4)), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9),rs.getString(10), rs.getString(11)); 
+				       section.add(sectionObj);
+				       
+				    }
+				       
+	      
+	       
+	    } catch (Exception ex) 
+		       { 
+		            // handle the error
+		        	 	System.err.println("Cannot connect to database server");
+		        	  	System.out.println("SQLException: " + ex.getMessage());
+		        	  	ex.printStackTrace(); 
+		        
+		        }
+			
+			return section; 
+		}
+		
+		
+//Method that returns a Building object by the buildingID	
 		private static Building getSingleBuilding(String pk)
 		{
 			  
@@ -236,7 +328,6 @@ private static Connection con;
 			return buildingObj; 
 			
 		}
-	
 //Method that Returns ArrayList<Classroom> by buildingPK	
 	private static ArrayList<Classroom> getBuildingClassrooms(String buildingPK)
 	{
@@ -688,10 +779,11 @@ public static void writeLine(Writer w, List<String> values, char separators, cha
 //********************************************************************************************//
 //private static LinkOption linkOption = null;
 //Method that prints schedule	
-	public static void exportSchedule(int index, String userDirectory)throws IOException{
+	public static void exportSchedule(String schedulepk, String userDirectory)throws IOException{
 			 
-			 ArrayList<Schedule> schedule = new ArrayList<Schedule>();
-			 schedule = getSchedules(); 
+			 ArrayList<Schedule> schedules = new ArrayList<Schedule>();
+			 Schedule schedule; 
+			 schedule = getSingleSchedule(schedulepk); 
 			  
 			 //Schedule scheduleObj; 
 			 //String csvFile = "/Users/JamesPainter/Desktop/Spring2017.csv";
@@ -708,7 +800,12 @@ public static void writeLine(Writer w, List<String> values, char separators, cha
 //			     
 //				 
 //			 }
-			 String printFile = "/Users/"+userDirectory+"/Desktop/"+schedule.get(index).getSemester()+schedule.get(index).getYear()+".csv";
+			 File file = new File(schedule.getSemester()+schedule.getYear()); 
+			 file.getAbsolutePath();
+			 
+			 System.out.println(file.getAbsolutePath());
+			 //String printFile = "/Users/"+userDirectory+"/Desktop/"+schedule.getSemester() + schedule.getYear()+".csv";
+			 String printFile = file.getAbsolutePath()+".csv";
 			 //FileWriter writer = new FileWriter(csvFile);
 			 FileWriter writer = new FileWriter(printFile); 
 		     
@@ -728,24 +825,24 @@ public static void writeLine(Writer w, List<String> values, char separators, cha
 		     
 		     try {
 		    	 
-		    	 writeLine(writer,Arrays.asList(schedule.get(index).getSemester(),schedule.get(index).getYear()));
+		    	 writeLine(writer,Arrays.asList(schedule.getSemester(),schedule.getYear()));
 		    	 writeLine(writer,Arrays.asList(Column1,Column2,Column3,Column4,Column5,Column6,Column7,Column8,Column9,Column10,Column11,Column12,Column13));		    
-				 for(int i =0; i < schedule.get(index).getSections().size(); i++)
+				 for(int i =0; i < schedule.getSections().size(); i++)
 				 {
 					   
-					   writeLine(writer,Arrays.asList(getSingleBuilding(schedule.get(index).getSections().get(i).getClassroom().GetBuildingID()).GetBuildingTag()
-							   		,schedule.get(index).getSections().get(i).getClassroom().GetRoomNumber()
-							   		,schedule.get(index).getSections().get(i).getProfessor().GetFirstName()
-							   		,schedule.get(index).getSections().get(i).getProfessor().GetLastName()
-							   		,schedule.get(index).getSections().get(i).getCourse().GetCourseTag()
-							   		,schedule.get(index).getSections().get(i).getCourse().GetCourseNumber()
-							   		,schedule.get(index).getSections().get(i).getCourse().GetCourseName()
-							   		,schedule.get(index).getSections().get(i).getStartTime()
-							   		,schedule.get(index).getSections().get(i).getEndTime()
-							   		,schedule.get(index).getSections().get(i).getStartDate()
-							   		,schedule.get(index).getSections().get(i).getEndDate()
-							   		,schedule.get(index).getSections().get(i).getNumSeats()
-							   		,schedule.get(index).getSections().get(i).getDaysOfWeek()
+					   writeLine(writer,Arrays.asList(getSingleBuilding(schedule.getSections().get(i).getClassroom().GetBuildingID()).GetBuildingTag()
+							   		,schedule.getSections().get(i).getClassroom().GetRoomNumber()
+							   		,schedule.getSections().get(i).getProfessor().GetFirstName()
+							   		,schedule.getSections().get(i).getProfessor().GetLastName()
+							   		,schedule.getSections().get(i).getCourse().GetCourseTag()
+							   		,schedule.getSections().get(i).getCourse().GetCourseNumber()
+							   		,schedule.getSections().get(i).getCourse().GetCourseName()
+							   		,schedule.getSections().get(i).getStartTime()
+							   		,schedule.getSections().get(i).getEndTime()
+							   		,schedule.getSections().get(i).getStartDate()
+							   		,schedule.getSections().get(i).getEndDate()
+							   		,schedule.getSections().get(i).getNumSeats()
+							   		,schedule.getSections().get(i).getDaysOfWeek()
 							   		));
 				 }		
 		    	 
@@ -1230,7 +1327,7 @@ public static void writeLine(Writer w, List<String> values, char separators, cha
 				{  
 				     
 				     try {
-				    	 	String SQL = "INSERT CLASSROOM VALUES ("+classroomID+","+classroomNo+","+buildingID+","+","+capacity+","+","+numOfComps+","+"0"+")";
+				    	 	String SQL = "INSERT CLASSROOM VALUES ("+classroomID+","+classroomNo+","+buildingID+","+capacity+","+","+numOfComps+","+"0"+")";
 				    	 	PreparedStatement ps = con.prepareStatement(SQL);
 				    	 	ps.executeUpdate();
 				         
@@ -1361,7 +1458,7 @@ public static void writeLine(Writer w, List<String> values, char separators, cha
 				{
 				     
 				     try {
-				    	 	String SQL = "INSERT SECTION VALUES ("+sectionID+","+","+classroomID+","+professorID+","+courseID+","+scheduleID+","+"'"+startTime+"'"+","+"'"+endTime+"'"+","+"'"+startDate+"'"+","+"'"+endDate+"'"+","+numOfSeats+","+daysOfWeek+")";
+				    	 	String SQL = "INSERT SECTION VALUES ("+sectionID+","+classroomID+","+professorID+","+courseID+","+scheduleID+","+"'"+startTime+"'"+","+"'"+endTime+"'"+","+"'"+startDate+"'"+","+"'"+endDate+"'"+","+numOfSeats+","+daysOfWeek+")";
 				    	 	PreparedStatement ps = con.prepareStatement(SQL);
 				    	 	ps.executeUpdate();
 				         
@@ -1656,7 +1753,7 @@ public static void writeLine(Writer w, List<String> values, char separators, cha
 		 
 //******************Test Printing the Schedule**************************/ 
 		 try {
-			 exportSchedule(15,"JamesPainter");
+			 exportSchedule("16","JamesPainter");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
